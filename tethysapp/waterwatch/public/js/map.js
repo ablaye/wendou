@@ -28,7 +28,9 @@ var LIBRARY_OBJECT = (function() {
         select_feature_layer,
         $chartModal,
         water_source,
-        water_layer;
+        water_layer,
+        true_source,
+        true_layer;
 
 
 
@@ -77,7 +79,7 @@ var LIBRARY_OBJECT = (function() {
 
 
 
-        var west_africa = new ol.Feature(new ol.geom.Polygon([[[-2025275.5014440303,1364859.5770601076],[-1247452.3016140766,1364859.5770601076],[-1247452.3016140766,1898084.286377496],[-2025275.5014440303,1898084.286377496],[-2025275.5014440303,1364859.5770601076]]]));
+        var west_africa = new ol.Feature(new ol.geom.Polygon([[[-1600000,1580000],[-1370000,1580000],[-1370000,1860000],[-1800000,1860000],[-1800000,1580000]]]));
 
         var boundary_layer = new ol.layer.Vector({
             title:'Boundary Layer',
@@ -85,7 +87,7 @@ var LIBRARY_OBJECT = (function() {
             style: new ol.style.Style({
                 stroke: new ol.style.Stroke({
                     color: "red",
-                    width: 1
+                    width: 3
                 })
             })
         });
@@ -122,19 +124,25 @@ var LIBRARY_OBJECT = (function() {
             // url:""
         });
 
-        layers = [base_map,base_map2,ponds_layer,water_layer,boundary_layer,select_feature_layer];
+        true_source = new ol.source.XYZ();
+        true_layer = new ol.layer.Tile({
+            source: true_source
+            // url:""
+        });
+
+        layers = [base_map,base_map2,ponds_layer,true_layer,water_layer,boundary_layer,select_feature_layer];
         map = new ol.Map({
             target: 'map',
             layers: layers,
             view: new ol.View({
-                center: ol.proj.fromLonLat([-14.45,14.4974]),
-                zoom: 10
+                center: ol.proj.fromLonLat([-14.222,15.2]),
+                zoom: 8
             })
         });
 
         map.getLayers().item(1).setVisible(false);
 
-    init_events = init_events = function() {
+    init_events = function() {
         (function () {
             var target, observer, config;
             // select the target node
@@ -158,7 +166,7 @@ var LIBRARY_OBJECT = (function() {
         //Map on zoom function. To keep track of the zoom level. Data can only be viewed can only be added at a certain zoom level.
         map.on("moveend", function() {
             var zoom = map.getView().getZoom();
-            var zoomInfo = '<p style="color:white;">Current Zoom level = ' + parseFloat(zoom,3)+'.</p>';
+            var zoomInfo = '<p style="color:white;">Current Zoom level = ' + zoom.toFixed(3)+'.</p>';
             document.getElementById('zoomlevel').innerHTML = zoomInfo;
             if (zoom > 14){
                 base_map2.setVisible(true);
@@ -201,6 +209,7 @@ var LIBRARY_OBJECT = (function() {
                 if("success" in data) {
                     $('.info').html('');
                     map.getLayers().item(3).getSource().setUrl("");
+                    map.getLayers().item(4).getSource().setUrl("");
                     var polygon = new ol.geom.Polygon(data.coordinates);
                     polygon.applyTransform(ol.proj.getTransform('EPSG:4326', 'EPSG:3857'));
                     var feature = new ol.Feature(polygon);
@@ -287,7 +296,8 @@ var LIBRARY_OBJECT = (function() {
                                 var xhr = ajax_update_database('mndwi',{'xValue':this.x,'yValue':this.y,'lat':lat,'lon':lon});
                                 xhr.done(function(data) {
                                     if("success" in data) {
-                                        map.getLayers().item(3).getSource().setUrl("https://earthengine.googleapis.com/map/"+data.water_mapid+"/{z}/{x}/{y}?token="+data.water_token);
+                                        map.getLayers().item(3).getSource().setUrl("https://earthengine.googleapis.com/map/"+data.true_mapid+"/{z}/{x}/{y}?token="+data.true_token);
+                                        map.getLayers().item(4).getSource().setUrl("https://earthengine.googleapis.com/map/"+data.water_mapid+"/{z}/{x}/{y}?token="+data.water_token);
                                         $("#meta-table").append('<tbody><tr><th>Latitude</th><td>'+(parseFloat(lat).toFixed(6))+'</td></tr><tr><th>Longitude</th><td>'+(parseFloat(lon).toFixed(6))+'</td></tr><tr><th>Current Date</th><td>'+data.date+'</td></tr><tr><th>Scene Cloud Cover</th><td>'+data.cloud_cover+'</td></tr></tbody>');
                                         $("#reset").removeClass('hidden');
                                         $("#layers_checkbox").removeClass('hidden');
@@ -361,7 +371,8 @@ var LIBRARY_OBJECT = (function() {
                               var xhr = ajax_update_database('mndwi',{'xValue':this.x,'yValue':this.y,'lat':lat,'lon':lon});
                               xhr.done(function(data) {
                                   if("success" in data) {
-                                      map.getLayers().item(3).getSource().setUrl("https://earthengine.googleapis.com/map/"+data.water_mapid+"/{z}/{x}/{y}?token="+data.water_token);
+                                      map.getLayers().item(3).getSource().setUrl("https://earthengine.googleapis.com/map/"+data.true_mapid+"/{z}/{x}/{y}?token="+data.true_token);
+                                      map.getLayers().item(4).getSource().setUrl("https://earthengine.googleapis.com/map/"+data.water_mapid+"/{z}/{x}/{y}?token="+data.water_token);
                                       $("#meta-table").append('<tbody><tr><th>Latitude</th><td>'+(parseFloat(lat).toFixed(6))+'</td></tr><tr><th>Longitude</th><td>'+(parseFloat(lon).toFixed(6))+'</td></tr><tr><th>Current Date</th><td>'+data.date+'</td></tr><tr><th>Scene Cloud Cover</th><td>'+data.cloud_cover+'</td></tr></tbody>');
                                       $("#reset").removeClass('hidden');
                                       $("#layers_checkbox").removeClass('hidden');
@@ -446,12 +457,21 @@ var LIBRARY_OBJECT = (function() {
         $(".alert").click(function(){
             $(".alert").alert("close");
         });
-        $('#mndwi_toggle').change(function() {
+        $('#true_toggle').change(function() {
             // this will contain a reference to the checkbox
             if (this.checked) {
                 map.getLayers().item(3).setVisible(true);
             } else {
                 map.getLayers().item(3).setVisible(false);
+            }
+        });
+
+        $('#mndwi_toggle').change(function() {
+            // this will contain a reference to the checkbox
+            if (this.checked) {
+                map.getLayers().item(4).setVisible(true);
+            } else {
+                map.getLayers().item(4).setVisible(false);
             }
         });
 

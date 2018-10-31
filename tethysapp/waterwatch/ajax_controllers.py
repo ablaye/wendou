@@ -7,7 +7,6 @@ def timeseries(request):
 
     return_obj = {}
 
-
     if request.is_ajax() and request.method == 'POST':
 
         info = request.POST
@@ -62,9 +61,11 @@ def mndwi(request):
         lon = info.get('lon')
 
         try:
-            mndwi_img,properties = getMNDWI(lon,lat,x_val,y_val)
+            true_img,mndwi_img,properties = getMNDWI(lon,lat,x_val,y_val)
             return_obj["water_mapid"] = mndwi_img["mapid"]
             return_obj["water_token"] = mndwi_img["token"]
+            return_obj["true_mapid"] = true_img["mapid"]
+            return_obj["true_token"] = true_img["token"]
             return_obj["date"] = clicked_date
             return_obj["cloud_cover"] = properties["CLOUD_COVER"]
             return_obj["success"] = "success"
@@ -73,3 +74,4 @@ def mndwi(request):
             return_obj["error"] = "Error Processing Request. Error: "+ str(e)
 
     return JsonResponse(return_obj)
+

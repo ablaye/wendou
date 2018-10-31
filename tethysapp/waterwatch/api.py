@@ -39,3 +39,4 @@ def api_get_timeseries(request):
         except Exception as e:
             json_obj["error"] = "Error Processing Request. Error: "+ str(e)
     return JsonResponse(json_obj)
+

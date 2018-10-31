@@ -57,3 +57,4 @@ class Waterwatch(TethysAppBase):
         )
 
         return url_maps
+

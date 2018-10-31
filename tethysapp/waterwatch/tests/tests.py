@@ -164,3 +164,4 @@ class WaterwatchTestCase(TethysTestCase):
         context = response.context
         self.assertEqual(context['my_integer'], 10)
         '''
+
