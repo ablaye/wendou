@@ -87,7 +87,7 @@ var LIBRARY_OBJECT = (function() {
             style: new ol.style.Style({
                 stroke: new ol.style.Stroke({
                     color: "red",
-                    width: 3
+                    width: 1
                 })
             })
         });
@@ -142,7 +142,7 @@ var LIBRARY_OBJECT = (function() {
 
         map.getLayers().item(1).setVisible(false);
 
-    init_events = function() {
+    init_events = init_events = function() {
         (function () {
             var target, observer, config;
             // select the target node
@@ -168,11 +168,11 @@ var LIBRARY_OBJECT = (function() {
             var zoom = map.getView().getZoom();
             var zoomInfo = '<p style="color:white;">Current Zoom level = ' + zoom.toFixed(3)+'.</p>';
             document.getElementById('zoomlevel').innerHTML = zoomInfo;
-            if (zoom > 14){
+ //           if (zoom > 14){
                 base_map2.setVisible(true);
-            }else{
-                base_map2.setVisible(false);
-            }
+   //         }else{
+     //           base_map2.setVisible(false);
+       //     }
             // Object.keys(layersDict).forEach(function(key){
             //     var source =  layersDict[key].getSource();
             // });
@@ -489,6 +489,7 @@ var LIBRARY_OBJECT = (function() {
 
     return public_interface;
 
-}()); // End of package wrapper
+}());
+// End of package wrapper
 // NOTE: that the call operator (open-closed parenthesis) is used to invoke the library wrapper
 // function immediately after being parsed.
