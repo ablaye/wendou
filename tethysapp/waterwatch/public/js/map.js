@@ -186,8 +186,9 @@ var LIBRARY_OBJECT = (function() {
  //           if (zoom > 14){
                 base_map2.setVisible(true);
    //         }else{
-      //          base_map2.setVisible(false);
-        //    }
+     //           base_map2.setVisible(false);
+       //     }
+
             // Object.keys(layersDict).forEach(function(key){
             //     var source =  layersDict[key].getSource();
             // });
