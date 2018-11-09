@@ -10,6 +10,7 @@
  *                      LIBRARY WRAPPER
  *****************************************************************************/
 
+
 var LIBRARY_OBJECT = (function() {
     // Wrap the library in a package function
     "use strict"; // And enable strict mode for this library
@@ -30,6 +31,9 @@ var LIBRARY_OBJECT = (function() {
         water_source,
         water_layer,
         true_source,
+        projectionSelect,
+        precisionInput,
+		mousePositionControl,
         true_layer;
 
 
@@ -48,6 +52,7 @@ var LIBRARY_OBJECT = (function() {
     /************************************************************************
      *                    PRIVATE FUNCTION IMPLEMENTATIONS
      *************************************************************************/
+
 
     init_vars = function(){
         var $layers_element = $('#layers');
@@ -87,7 +92,7 @@ var LIBRARY_OBJECT = (function() {
             style: new ol.style.Style({
                 stroke: new ol.style.Stroke({
                     color: "red",
-                    width: 3
+                    width: 1
                 })
             })
         });
@@ -131,48 +136,58 @@ var LIBRARY_OBJECT = (function() {
         });
 
         layers = [base_map,base_map2,ponds_layer,true_layer,water_layer,boundary_layer,select_feature_layer];
+        
+
         map = new ol.Map({
-            target: 'map',
+			target: 'map',
             layers: layers,
             view: new ol.View({
                 center: ol.proj.fromLonLat([-14.222,15.2]),
                 zoom: 8
             })
         });
+		var mouse_position = new ol.control.MousePosition({
+			coordinateFormat: ol.coordinate.createStringXY(4),
+			projection: 'EPSG:4326',
+			className: 'custom-mouse-position',
+			target:'coordonnees',
+			undefinedHTML: '&nbsp;'
+		});
+		map.addControl(mouse_position);
+        
+		map.getLayers().item(1).setVisible(false);
 
-        map.getLayers().item(1).setVisible(false);
+		init_events = init_events = function() {
+			(function () {
+				var target, observer, config;
+				// select the target node
+				target = $('#app-content-wrapper')[0];
 
-    init_events = function() {
-        (function () {
-            var target, observer, config;
-            // select the target node
-            target = $('#app-content-wrapper')[0];
+				observer = new MutationObserver(function () {
+					window.setTimeout(function () {
+						map.updateSize();
+					}, 350);
+				});
+				$(window).on('resize', function () {
+					map.updateSize();
+				});
 
-            observer = new MutationObserver(function () {
-                window.setTimeout(function () {
-                    map.updateSize();
-                }, 350);
-            });
-            $(window).on('resize', function () {
-                map.updateSize();
-            });
+				config = {attributes: true};
 
-            config = {attributes: true};
-
-            observer.observe(target, config);
-        }());
-      }
+				observer.observe(target, config);
+			}());
+		  }
 
         //Map on zoom function. To keep track of the zoom level. Data can only be viewed can only be added at a certain zoom level.
         map.on("moveend", function() {
             var zoom = map.getView().getZoom();
             var zoomInfo = '<p style="color:white;">Current Zoom level = ' + zoom.toFixed(3)+'.</p>';
             document.getElementById('zoomlevel').innerHTML = zoomInfo;
-            if (zoom > 14){
+ //           if (zoom > 14){
                 base_map2.setVisible(true);
-            }else{
-                base_map2.setVisible(false);
-            }
+   //         }else{
+      //          base_map2.setVisible(false);
+        //    }
             // Object.keys(layersDict).forEach(function(key){
             //     var source =  layersDict[key].getSource();
             // });
@@ -257,18 +272,14 @@ var LIBRARY_OBJECT = (function() {
                 }
             });
             });
-      //       map.on('pointermove', function(evt) {
-      //           if (evt.dragging) {
-      //               return;
-      //           }
-      //           var pixel = map.getEventPixel(evt.originalEvent);
-      //           var hit = map.forEachLayerAtPixel(pixel, function(layer) {
-      //               if (layer == layers[2]){
-      //                   current_layer = layer;
-      //                   return true;}
-      //           });
-      //           map.getTargetElement().style.cursor = hit ? 'pointer' : '';
-      // });
+            map.on('pointermove', function(evt) {
+				var clickCoord = evt.coordinate;
+				var proj_coords = ol.proj.transform(clickCoord, 'EPSG:3857','EPSG:4326');
+				$("#latitude").val(proj_coords[1]);
+				$("#longitude").val(proj_coords[0]);
+
+
+			});
       };
 
     generate_chart = function(data,lat,lon,name){
@@ -489,6 +500,7 @@ var LIBRARY_OBJECT = (function() {
 
     return public_interface;
 
-}()); // End of package wrapper
+}());
+// End of package wrapper
 // NOTE: that the call operator (open-closed parenthesis) is used to invoke the library wrapper
 // function immediately after being parsed.
