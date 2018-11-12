@@ -47,7 +47,20 @@
 .gee-attr:hover {
   background: rgba(0,60,136,.5)
 }
-
+.coord-attr {
+    top: 185px;
+    right: 5px;
+    width: 275px;
+    height:52px;
+    margin: 3px;
+    color:white;
+    background: rgba(0,60,136,.8);
+    border: 1px #ddd solid;
+    z-index: 99999;
+}
+.coord-attr:hover {
+  background: rgba(0,60,136,.5)
+}
 .zoom-attr {
     top: 35px;
     right: 5px;

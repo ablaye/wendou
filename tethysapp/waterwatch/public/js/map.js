@@ -140,6 +140,10 @@ var LIBRARY_OBJECT = (function() {
 
         map = new ol.Map({
 			target: 'map',
+			controls: ol.control.defaults().extend([
+				new ol.control.ScaleLine(),
+				new ol.control.ZoomSlider()
+			]),
             layers: layers,
             view: new ol.View({
                 center: ol.proj.fromLonLat([-14.222,15.2]),
