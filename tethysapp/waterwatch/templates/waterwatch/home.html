@@ -60,6 +60,24 @@
 <div class="coord-attr ol-unselectable ol-control">
 	Coordonnees : <p style="color:red;" id="coordonnees"></p>
 </div>
+<!--
+<nav id="menulayers">
+	<ul>
+		<li><input type="radio" id="ponds_layer" name="sous_layer" value="ponds_layer" class="visible" checked>ponds_layer</li>
+	</ul>
+</nav>
+-->
+<div id="menulayers" class="checkbox">
+	<h3 style="color:red;">Layers</h3>
+	<ul>
+		<li><label><input type="checkbox" id="base_map" name="base_map" checked>Base Map 01</label>
+		<label><input type="checkbox" id="base_map2" name="base_map2" checked>Base Map 02</label></li>&nbsp
+		<li><label><input type="checkbox" id="ponds_layer" name="ponds_layer" checked>Ponds Layer</label>
+		<label><input type="checkbox" id="true_layer" name="true_layer" checked>True Layer</label></li>&nbsp
+		<li><label><input type="checkbox" id="water_layer" name="water_layer" checked>Water Layer</label>
+		<label><input type="checkbox" id="boundary_layer" name="boundary_layer" checked>boundary Layer</label></li>
+	</ul>
+</div>
 
 <div class="alert alert-info alert-dismissible intro_message" role="alert">
     <div align="center">
@@ -68,9 +86,7 @@
         Zoom into an area of interest and click on a pond. The zoom level has to be greater than 14. <br> The basemaps will switch at zoom level 14.
     </div>
 </div>
-
 <div id="map" class="map">
-
     <div id="map-view-legend" class="map-view-legend ol-unselectable ol-control">
         <div>
             <svg width="20" height="20" viewPort="0 0 20 20" version="1.1"
@@ -102,16 +118,10 @@
     <div id="zoom-attr" class="zoom-attr ol-unselectable ol-control">
         <div id="zoomlevel"></div>
     </div>
-   
     <!--<div id="zoomlevel"></div>-->
 </div>
-
-
-
-
-<div id="layers" name="layers" data-ponds-mapid="{{ponds_mapid}}" data-ponds-token="{{ponds_token}}" style="display:none;">
+<div id="layers" name="layers" data-ponds-mapid="{{ponds_mapid}}" data-ponds-token="{{ponds_token}}" style="display:none;">	
     {% endblock %}
-
     {# Use the after_app_content block for modals #}
     {% block after_app_content %}
     <!-- Help Modal -->
@@ -136,13 +146,11 @@
                         <div class="logo-image"><a href="http://www.icimod.org/" target="_blank"><img src="https://servirglobal.net/Portals/_default/Skins/Servir2015/img/icimod.png"></a></div>
                         <div class="logo-image"><a href="http://www.adpc.net/" target="_blank"><img src="https://servirglobal.net/Portals/_default/Skins/Servir2015/img/adpc.png"></a></div>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 <!--Show TS Plot -->
 <div class="modal fade" id="chart-modal" tabindex="-1" role="dialog" aria-labelledby="chart-modal-label">
     <div class="modal-dialog" role="document">

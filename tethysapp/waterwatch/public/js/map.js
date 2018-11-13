@@ -19,6 +19,7 @@ var LIBRARY_OBJECT = (function() {
      *                      MODULE LEVEL / GLOBAL VARIABLES
      *************************************************************************/
     var base_map2,
+		baseLayer,
         current_layer,
         layers,
         map,
@@ -72,17 +73,19 @@ var LIBRARY_OBJECT = (function() {
                 attributions: [attribution],
                 url: 'https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/' +
                 'World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}'
-            })
+            }),
+            visible: false,
+            name:'base_map'
         });
 
         base_map2 = new ol.layer.Tile({
             source: new ol.source.BingMaps({
                 key: '5TC0yID7CYaqv3nVQLKe~xWVt4aXWMJq2Ed72cO4xsA~ApdeyQwHyH_btMjQS1NJ7OHKY8BK-W-EMQMrIavoQUMYXeZIQOUURnKGBOC7UCt4',
                 imagerySet: 'AerialWithLabels' // Options 'Aerial', 'AerialWithLabels', 'Road'
-            })
+            }),
+            visible: true,
+            name:'base_map2'            
         });
-
-
 
         var west_africa = new ol.Feature(new ol.geom.Polygon([[[-1600000,1580000],[-1370000,1580000],[-1370000,1860000],[-1800000,1860000],[-1800000,1580000]]]));
 
@@ -94,7 +97,10 @@ var LIBRARY_OBJECT = (function() {
                     color: "red",
                     width: 1
                 })
-            })
+            }),
+            visible: true,
+            name:'boundary_layer'            
+           
         });
         boundary_layer.getSource().addFeatures([west_africa]);
         // var base_map =  new ol.layer.Tile({
@@ -109,7 +115,10 @@ var LIBRARY_OBJECT = (function() {
         var ponds_layer = new ol.layer.Tile({
             source: new ol.source.XYZ({
                 url: "https://earthengine.googleapis.com/map/"+ponds_mapid+"/{z}/{x}/{y}?token="+ponds_token
-            })
+            }),
+            visible: true,
+            name:'ponds_layer'
+
         });
 
         select_feature_source = new ol.source.Vector();
@@ -136,20 +145,39 @@ var LIBRARY_OBJECT = (function() {
         });
 
         layers = [base_map,base_map2,ponds_layer,true_layer,water_layer,boundary_layer,select_feature_layer];
-        
-
+	//		layers = [base_map,base_map2,true_layer,water_layer,select_feature_layer];
         map = new ol.Map({
 			target: 'map',
 			controls: ol.control.defaults().extend([
 				new ol.control.ScaleLine(),
 				new ol.control.ZoomSlider()
 			]),
+			renderer: 'canvas',
             layers: layers,
             view: new ol.View({
                 center: ol.proj.fromLonLat([-14.222,15.2]),
-                zoom: 8
+                zoom: 8,
+                maxZoom: 19,
+                minZoom:2
             })
-        });
+        });       
+/*   $('#menulayers input[type=radio]').change(function() {
+		var layer = $(this).val();
+
+		map.getLayers().getArray().forEach(function(e) {
+			var name = e.get('name');
+			e.setVisible(name == layer);
+		});
+	});
+   $('#menulayers input[type=checkbox]').change(function() {
+		var layer = $(this).val();
+		map.getLayers().getArray().forEach(function(e) {
+			var name = e.get('name');
+			e.setVisible(name == layer);
+		});
+	});
+*/
+
 		var mouse_position = new ol.control.MousePosition({
 			coordinateFormat: ol.coordinate.createStringXY(4),
 			projection: 'EPSG:4326',
@@ -481,7 +509,6 @@ var LIBRARY_OBJECT = (function() {
                 map.getLayers().item(3).setVisible(false);
             }
         });
-
         $('#mndwi_toggle').change(function() {
             // this will contain a reference to the checkbox
             if (this.checked) {
@@ -490,13 +517,68 @@ var LIBRARY_OBJECT = (function() {
                 map.getLayers().item(4).setVisible(false);
             }
         });
-
         $('#ponds_toggle').change(function() {
             // this will contain a reference to the checkbox
             if (this.checked) {
                 map.getLayers().item(2).setVisible(true);
             } else {
                 map.getLayers().item(2).setVisible(false);
+            }
+        });
+        $('#base_map').change(function() {
+            // this will contain a reference to the checkbox
+            if (this.checked) {
+                map.getLayers().item(0).setVisible(true);
+            } else {
+                map.getLayers().item(0).setVisible(false);
+            }
+        });
+        $('#base_map2').change(function() {
+            // this will contain a reference to the checkbox
+            if (this.checked) {
+                map.getLayers().item(1).setVisible(true);
+            } else {
+                map.getLayers().item(1).setVisible(false);
+            }
+        });
+        $('#ponds_layer').change(function() {
+            // this will contain a reference to the checkbox
+            if (this.checked) {
+                map.getLayers().item(2).setVisible(true);
+            } else {
+                map.getLayers().item(2).setVisible(false);
+            }
+        });
+        $('#true_layer').change(function() {
+            // this will contain a reference to the checkbox
+            if (this.checked) {
+                map.getLayers().item(3).setVisible(true);
+            } else {
+                map.getLayers().item(3).setVisible(false);
+            }
+        });
+        $('#water_layer').change(function() {
+            // this will contain a reference to the checkbox
+            if (this.checked) {
+                map.getLayers().item(4).setVisible(true);
+            } else {
+                map.getLayers().item(4).setVisible(false);
+            }
+        });
+        $('#boundary_layer').change(function() {
+            // this will contain a reference to the checkbox
+            if (this.checked) {
+                map.getLayers().item(5).setVisible(true);
+            } else {
+                map.getLayers().item(5).setVisible(false);
+            }
+        });
+        $('#select_feature_layer').change(function() {
+            // this will contain a reference to the checkbox
+            if (this.checked) {
+                map.getLayers().item(6).setVisible(true);
+            } else {
+                map.getLayers().item(6).setVisible(false);
             }
         });
 
