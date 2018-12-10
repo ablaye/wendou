@@ -9,12 +9,9 @@
 /*****************************************************************************
  *                      LIBRARY WRAPPER
  *****************************************************************************/
-
-
 var LIBRARY_OBJECT = (function() {
     // Wrap the library in a package function
     "use strict"; // And enable strict mode for this library
-
     /************************************************************************
      *                      MODULE LEVEL / GLOBAL VARIABLES
      *************************************************************************/
@@ -25,6 +22,14 @@ var LIBRARY_OBJECT = (function() {
         map,
         ponds_mapid,
         ponds_token,
+        region_mapid,
+        region_token,
+        commune_mapid,
+        commune_token,
+        arrondissement_mapid,
+        arrondissement_token,
+        mndwi_mapid,
+        mndwi_token,
         public_interface,				// Object returned by the module
         select_feature_source,
         select_feature_layer,
@@ -35,38 +40,38 @@ var LIBRARY_OBJECT = (function() {
         projectionSelect,
         precisionInput,
 		mousePositionControl,
-        true_layer;
-
-
-
+		true_layer;
     /************************************************************************
      *                    PRIVATE FUNCTION DECLARATIONS
      *************************************************************************/
-
     var generate_chart,
+		generate_details,
         generate_forecast,
         init_all,
         init_events,
         init_vars,
         init_map;
-
     /************************************************************************
      *                    PRIVATE FUNCTION IMPLEMENTATIONS
      *************************************************************************/
-
-
     init_vars = function(){
         var $layers_element = $('#layers');
         ponds_mapid = $layers_element.attr('data-ponds-mapid');
         ponds_token = $layers_element.attr('data-ponds-token');
+        region_mapid = $layers_element.attr('data-region-mapid');
+        region_token = $layers_element.attr('data-region-token');
+        commune_mapid = $layers_element.attr('data-commune-mapid');
+        commune_token = $layers_element.attr('data-commune-token');
+        arrondissement_mapid = $layers_element.attr('data-arrondissement-mapid');
+        arrondissement_token = $layers_element.attr('data-arrondissement-token');
+        mndwi_mapid = $layers_element.attr('data-mndwi-mapid');
+        mndwi_token = $layers_element.attr('data-mndwi-token');
         $chartModal = $("#chart-modal");
     };
-
     init_map = function(){
         var attribution = new ol.Attribution({
             html: 'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/rest/services/">ArcGIS</a>'
         });
-
         var base_map = new ol.layer.Tile({
             crossOrigin: 'anonymous',
             source: new ol.source.XYZ({
@@ -74,19 +79,49 @@ var LIBRARY_OBJECT = (function() {
                 url: 'https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/' +
                 'World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}'
             }),
-            visible: false,
+            visible: true,
             name:'base_map'
         });
-
         base_map2 = new ol.layer.Tile({
             source: new ol.source.BingMaps({
                 key: '5TC0yID7CYaqv3nVQLKe~xWVt4aXWMJq2Ed72cO4xsA~ApdeyQwHyH_btMjQS1NJ7OHKY8BK-W-EMQMrIavoQUMYXeZIQOUURnKGBOC7UCt4',
                 imagerySet: 'AerialWithLabels' // Options 'Aerial', 'AerialWithLabels', 'Road'
             }),
-            visible: true,
+            visible: false,
             name:'base_map2'            
         });
 
+		var getText = function(feature) {
+			var text = feature.get('nom');
+			return text;
+		};
+
+		var createTextStyle = function(feature) {
+		  return new ol.style.Text({
+			textAlign: 'center',
+			textBaseline: 'middle',
+			font: '12px Verdana',
+			text: getText(feature),
+			fill: new ol.style.Fill({color: 'black'}),
+			stroke: new ol.style.Stroke({color: 'white', width: 0.5})
+		  });
+		};
+
+        var createPolygonStyleFunction = function() {
+			return function(feature) {
+				var style08 = new ol.style.Style({
+				  stroke: new ol.style.Stroke({
+					color: 'blue',
+					width: 1
+				  }),
+				  fill: new ol.style.Fill({
+					color: '#ff0000'
+				  }),
+				  text: createTextStyle(feature)
+				});
+				return style08;
+			};
+		};    
         var west_africa = new ol.Feature(new ol.geom.Polygon([[[-1600000,1580000],[-1370000,1580000],[-1370000,1860000],[-1800000,1860000],[-1800000,1580000]]]));
 
         var boundary_layer = new ol.layer.Vector({
@@ -99,28 +134,55 @@ var LIBRARY_OBJECT = (function() {
                 })
             }),
             visible: true,
-            name:'boundary_layer'            
-           
+            name:'boundary_layer'                     
         });
+        var defaultStyles = [
+		   new ol.style.Style({
+				fill: new ol.style.Fill({
+					color: [203, 194, 185, 1]
+				}),
+				stroke: new ol.style.Stroke({color: 'black', width: 2})
+		   })
+		];
         boundary_layer.getSource().addFeatures([west_africa]);
-        // var base_map =  new ol.layer.Tile({
-        //     crossOrigin:'anonymous',
-        //     source: new ol.source.XYZ({
-        //       attributions: [attribution],
-        //       url: 'https://server.arcgisonline.com/ArcGIS/rest/services/' +
-        //           'World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
-        //     })
-        //   });
 
-        var ponds_layer = new ol.layer.Tile({
+         var mndwi_layer = new ol.layer.Tile({
+            source: new ol.source.XYZ({
+                url: "https://earthengine.googleapis.com/map/"+mndwi_mapid+"/{z}/{x}/{y}?token="+mndwi_token
+            }),
+            visible: true,
+            name:'mndwi_layer'
+        });
+
+         var ponds_layer = new ol.layer.Tile({
             source: new ol.source.XYZ({
                 url: "https://earthengine.googleapis.com/map/"+ponds_mapid+"/{z}/{x}/{y}?token="+ponds_token
             }),
             visible: true,
             name:'ponds_layer'
-
         });
-
+         var region_layer = new ol.layer.Tile({
+            source: new ol.source.XYZ({
+                url: "https://earthengine.googleapis.com/map/"+region_mapid+"/{z}/{x}/{y}?token="+region_token
+            }),
+            style: defaultStyles,
+            visible: false,
+            name:'region_layer'
+        });
+         var commune_layer = new ol.layer.Tile({
+            source: new ol.source.XYZ({
+                url: "https://earthengine.googleapis.com/map/"+commune_mapid+"/{z}/{x}/{y}?token="+commune_token
+            }),
+            visible: false,
+            name:'commune_layer'
+        });
+         var arrondissement_layer = new ol.layer.Tile({
+            source: new ol.source.XYZ({
+                url: "https://earthengine.googleapis.com/map/"+arrondissement_mapid+"/{z}/{x}/{y}?token="+arrondissement_token
+            }),
+            visible: false,
+            name:'arrondissement_layer'
+        });
         select_feature_source = new ol.source.Vector();
         select_feature_layer = new ol.layer.Vector({
             source: select_feature_source,
@@ -144,8 +206,7 @@ var LIBRARY_OBJECT = (function() {
             // url:""
         });
 
-        layers = [base_map,base_map2,ponds_layer,true_layer,water_layer,boundary_layer,select_feature_layer];
-	//		layers = [base_map,base_map2,true_layer,water_layer,select_feature_layer];
+        layers = [base_map,mndwi_layer,ponds_layer,true_layer,water_layer,select_feature_layer,region_layer,commune_layer,arrondissement_layer];
         map = new ol.Map({
 			target: 'map',
 			controls: ol.control.defaults().extend([
@@ -161,22 +222,6 @@ var LIBRARY_OBJECT = (function() {
                 minZoom:2
             })
         });       
-/*   $('#menulayers input[type=radio]').change(function() {
-		var layer = $(this).val();
-
-		map.getLayers().getArray().forEach(function(e) {
-			var name = e.get('name');
-			e.setVisible(name == layer);
-		});
-	});
-   $('#menulayers input[type=checkbox]').change(function() {
-		var layer = $(this).val();
-		map.getLayers().getArray().forEach(function(e) {
-			var name = e.get('name');
-			e.setVisible(name == layer);
-		});
-	});
-*/
 
 		var mouse_position = new ol.control.MousePosition({
 			coordinateFormat: ol.coordinate.createStringXY(4),
@@ -213,10 +258,10 @@ var LIBRARY_OBJECT = (function() {
         //Map on zoom function. To keep track of the zoom level. Data can only be viewed can only be added at a certain zoom level.
         map.on("moveend", function() {
             var zoom = map.getView().getZoom();
-            var zoomInfo = '<p style="color:white;">Current Zoom level = ' + zoom.toFixed(3)+'.</p>';
+            var zoomInfo = '<p style="color:green;">Current Zoom level = ' + zoom.toFixed(3)+'.</p>';
             document.getElementById('zoomlevel').innerHTML = zoomInfo;
  //           if (zoom > 14){
-                base_map2.setVisible(true);
+  //              base_map2.setVisible(true);
    //         }else{
      //           base_map2.setVisible(false);
        //     }
@@ -225,14 +270,11 @@ var LIBRARY_OBJECT = (function() {
             //     var source =  layersDict[key].getSource();
             // });
         });
-
-
         map.on("singleclick",function(evt){
 
             var zoom = map.getView().getZoom();
             $chartModal.modal('show');
             if (zoom < 14){
-
                 $('.info').html('<b>The zoom level has to be 14 or greater. Please check and try again.</b>');
                 $('#info').removeClass('hidden');
                 return false;
@@ -251,6 +293,7 @@ var LIBRARY_OBJECT = (function() {
             $loadingF.removeClass('hidden');
             $("#plotter").addClass('hidden');
             $("#forecast-plotter").addClass('hidden');
+            $("#details-plotter").addClass('hidden');
             //$tsplotModal.modal('show');
             var xhr = ajax_update_database('timeseries',{'lat':proj_coords[1],'lon':proj_coords[0]},'name');
             xhr.done(function(data) {
@@ -274,12 +317,8 @@ var LIBRARY_OBJECT = (function() {
                     $('.info').html('<b>Error processing the request. Please be sure to click on a feature.'+data.error+'</b>');
                     $('#info').removeClass('hidden');
                     $loading.addClass('hidden');
-
                 }
               });
-
-
-
             var yhr = ajax_update_database('forecast',{'lat':proj_coords[1],'lon':proj_coords[0]},'name');
             yhr.done(function(data) {
                 if("success" in data) {
@@ -301,17 +340,37 @@ var LIBRARY_OBJECT = (function() {
                     $('.info').html('<b>Error processing the request. Please be sure to click on a feature.'+data.error+'</b>');
                     $('#info').removeClass('hidden');
                     $loadingF.addClass('hidden');
-
                 }
             });
+            var zhr = ajax_update_database('details',{'lat':proj_coords[1],'lon':proj_coords[0]},'name');
+            zhr.done(function(data) {
+                if("success" in data) {
+                    $('.info').html('');
+                    map.getLayers().item(3).getSource().setUrl("");
+                    var polygon = new ol.geom.Polygon(data.coordinates);
+                    polygon.applyTransform(ol.proj.getTransform('EPSG:4326', 'EPSG:3857'));
+                    var feature = new ol.Feature(polygon);
+
+                    map.getLayers().item(5).getSource().clear();
+                    select_feature_source.addFeature(feature);
+                    generate_details(proj_coords[1],proj_coords[0],data.namePond,data.sup_Pond,data.coordinates,data.nameRegion,data.nameCommune,data.nameArrondissement);
+
+                    $loadingF.addClass('hidden');
+  //                  $("#details-plotter").removeClass('hidden');
+
+                }else{
+                    $('.info').html('<b>Error processing the request. Please be sure to click on a feature.'+data.error+'</b>');
+                    $('#info').removeClass('hidden');
+                    $loadingF.addClass('hidden');
+                }
             });
-            map.on('pointermove', function(evt) {
+		});
+
+        map.on('pointermove', function(evt) {
 				var clickCoord = evt.coordinate;
 				var proj_coords = ol.proj.transform(clickCoord, 'EPSG:3857','EPSG:4326');
 				$("#latitude").val(proj_coords[1]);
 				$("#longitude").val(proj_coords[0]);
-
-
 			});
       };
 
@@ -413,6 +472,7 @@ var LIBRARY_OBJECT = (function() {
                               var lat = $("#current-lat").val();
                               var lon = $("#current-lon").val();
                               var xhr = ajax_update_database('mndwi',{'xValue':this.x,'yValue':this.y,'lat':lat,'lon':lon});
+
                               xhr.done(function(data) {
                                   if("success" in data) {
                                       map.getLayers().item(3).getSource().setUrl("https://earthengine.googleapis.com/map/"+data.true_mapid+"/{z}/{x}/{y}?token="+data.true_token);
@@ -465,6 +525,12 @@ var LIBRARY_OBJECT = (function() {
           }]
       });
   };
+    generate_details = function(lat,lon,namePond,sup_Pond,coordinates,nameRegion,nameCommune,nameArrondissement){
+        $("#meta-table-details").html('');
+        $("#meta-table-details").append('<tbody><tr><th>Latitude</th><td>'+(lat.toFixed(6))+'</td></tr><tr><th>Longitude</th><td>'+(lon.toFixed(6))+'</td></tr><tr><th>Nom Pond</th><td>'+namePond+'</td></tr><tr><th>Area Pond</th><td>'+sup_Pond+'</td></tr><tr><th>Nom Region</th><td>'+nameRegion+'</td></tr><tr><th>Nom Region</th><td>'+nameArrondissement+'</td></tr><tr><th>Nom Region</th><td>'+nameCommune+'</td></tr></tbody>');
+        $("#reset").removeClass('hidden');
+
+    };
 
     //onClick="vector_summer.setVisible(!vector_summer.getVisible());"
 
@@ -501,30 +567,6 @@ var LIBRARY_OBJECT = (function() {
         $(".alert").click(function(){
             $(".alert").alert("close");
         });
-        $('#true_toggle').change(function() {
-            // this will contain a reference to the checkbox
-            if (this.checked) {
-                map.getLayers().item(3).setVisible(true);
-            } else {
-                map.getLayers().item(3).setVisible(false);
-            }
-        });
-        $('#mndwi_toggle').change(function() {
-            // this will contain a reference to the checkbox
-            if (this.checked) {
-                map.getLayers().item(4).setVisible(true);
-            } else {
-                map.getLayers().item(4).setVisible(false);
-            }
-        });
-        $('#ponds_toggle').change(function() {
-            // this will contain a reference to the checkbox
-            if (this.checked) {
-                map.getLayers().item(2).setVisible(true);
-            } else {
-                map.getLayers().item(2).setVisible(false);
-            }
-        });
         $('#base_map').change(function() {
             // this will contain a reference to the checkbox
             if (this.checked) {
@@ -549,7 +591,7 @@ var LIBRARY_OBJECT = (function() {
                 map.getLayers().item(2).setVisible(false);
             }
         });
-        $('#true_layer').change(function() {
+        $('#true_toggle').change(function() {
             // this will contain a reference to the checkbox
             if (this.checked) {
                 map.getLayers().item(3).setVisible(true);
@@ -557,7 +599,7 @@ var LIBRARY_OBJECT = (function() {
                 map.getLayers().item(3).setVisible(false);
             }
         });
-        $('#water_layer').change(function() {
+        $('#mndwi_toggle').change(function() {
             // this will contain a reference to the checkbox
             if (this.checked) {
                 map.getLayers().item(4).setVisible(true);
@@ -565,15 +607,7 @@ var LIBRARY_OBJECT = (function() {
                 map.getLayers().item(4).setVisible(false);
             }
         });
-        $('#boundary_layer').change(function() {
-            // this will contain a reference to the checkbox
-            if (this.checked) {
-                map.getLayers().item(5).setVisible(true);
-            } else {
-                map.getLayers().item(5).setVisible(false);
-            }
-        });
-        $('#select_feature_layer').change(function() {
+        $('#select_region_layer').change(function() {
             // this will contain a reference to the checkbox
             if (this.checked) {
                 map.getLayers().item(6).setVisible(true);
@@ -581,8 +615,30 @@ var LIBRARY_OBJECT = (function() {
                 map.getLayers().item(6).setVisible(false);
             }
         });
-
-
+        $('#select_commune_layer').change(function() {
+            // this will contain a reference to the checkbox
+            if (this.checked) {
+                map.getLayers().item(7).setVisible(true);
+            } else {
+                map.getLayers().item(7).setVisible(false);
+            }
+        });
+        $('#select_arrondissement_layer').change(function() {
+            // this will contain a reference to the checkbox
+            if (this.checked) {
+                map.getLayers().item(8).setVisible(true);
+            } else {
+                map.getLayers().item(8).setVisible(false);
+            }
+        });
+        $('#select_mndwi_layer').change(function() {
+            // this will contain a reference to the checkbox
+            if (this.checked) {
+                map.getLayers().item(1).setVisible(true);
+            } else {
+                map.getLayers().item(1).setVisible(false);
+            }
+        });
     });
 
     return public_interface;

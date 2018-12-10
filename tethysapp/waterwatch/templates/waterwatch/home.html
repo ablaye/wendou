@@ -1,12 +1,10 @@
 {% extends "waterwatch/base.html" %}
 {% load tethys_gizmos %}
 {% load staticfiles %}
-
 {% block styles %}
 {{ block.super }}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 {% endblock %}
-
 {% block global_scripts %}
 {{block.super}}
 <script src="https://code.highcharts.com/stock/highstock.js"></script>
@@ -20,16 +18,12 @@
 <!--<script src="http://highcharts.github.io/export-csv/export-csv.js"></script>-->
 <!--  <script src="https://openlayers.org/en/v5.3.0/build/ol.js"></script>-->
 {% endblock %}
-
-
-
 {% block header_buttons %}
 <!--<div id="google_translate_element"></div><script type="text/javascript">-->
 <!--function googleTranslateElementInit() {-->
 <!--new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');-->
 <!--}-->
 <!--</script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>&nbsp-->
-
 <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Reset" onClick="window.location.reload()">
     <a><span class="fa fa-refresh"></span></a>
 </div>
@@ -40,7 +34,6 @@
     <a data-toggle="modal" data-target="#help-modal"><span class="glyphicon glyphicon-question-sign"></span></a>
 </div>
 {% endblock %}
-
 {% block app_content %}
 <style>
     #map{
@@ -58,27 +51,19 @@
     }
 </style>
 <div class="coord-attr ol-unselectable ol-control">
-	Coordonnees : <p style="color:red;" id="coordonnees"></p>
+	<span style="color:green;">Coordonnees :</span> <p style="color:red;" id="coordonnees"></p>
 </div>
-<!--
-<nav id="menulayers">
-	<ul>
-		<li><input type="radio" id="ponds_layer" name="sous_layer" value="ponds_layer" class="visible" checked>ponds_layer</li>
-	</ul>
-</nav>
--->
 <div id="menulayers" class="checkbox">
 	<h3 style="color:red;">Layers</h3>
 	<ul>
 		<li><label><input type="checkbox" id="base_map" name="base_map" checked>Base Map 01</label>
-		<label><input type="checkbox" id="base_map2" name="base_map2" checked>Base Map 02</label></li>&nbsp
+		<label><input type="checkbox" id="select_mndwi_layer" name="mndwi_layer" >MNDWI</label></li>&nbsp
 		<li><label><input type="checkbox" id="ponds_layer" name="ponds_layer" checked>Ponds Layer</label>
-		<label><input type="checkbox" id="true_layer" name="true_layer" checked>True Layer</label></li>&nbsp
-		<li><label><input type="checkbox" id="water_layer" name="water_layer" checked>Water Layer</label>
-		<label><input type="checkbox" id="boundary_layer" name="boundary_layer" checked>boundary Layer</label></li>
+		<label><input type="checkbox" id="select_region_layer" name="region_layer">Region</label></li>&nbsp
+		<li><label><input type="checkbox" id="select_arrondissement_layer" name="arrondissement_layer" >Arrondissement</label>
+		<label><input type="checkbox" id="select_commune_layer" name="commune_layer" >Commune</label></li>
 	</ul>
 </div>
-
 <div class="alert alert-info alert-dismissible intro_message" role="alert">
     <div align="center">
         <button id="close_map_intro_message" type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -93,26 +78,26 @@
                  xmlns="http://www.w3.org/2000/svg">
                 <circle cx="20" cy="20" r="20" stroke="red" fill="red" stroke-width="2"/>
             </svg>
-            < 25% Water Coverage
+            <span style="color:green;">< 25% Water Coverage</span>
         </div>
         <div>
             <svg width="20" height="20" viewPort="0 0 20 20" version="1.1"
                  xmlns="http://www.w3.org/2000/svg">
                 <circle cx="20" cy="20" r="20" stroke="yellow" fill="yellow" stroke-width="2"/>
             </svg>
-            25% to 75% Water Coverage
+            <span style="color:green;">25% to 75% Water Coverage</span>
         </div>
         <div>
             <svg width="20" height="20" viewPort="0 0 20 20" version="1.1"
                  xmlns="http://www.w3.org/2000/svg">
                 <circle cx="20" cy="20" r="20" stroke="green" fill="green" stroke-width="2"/>
             </svg>
-            > 75% Water Coverage
+            <span style="color:green;">> 75% Water Coverage</span>
         </div>
     </div>
     <div id="gee-attr" class="gee-attr ol-unselectable ol-control">
         <div align="center">
-            <p style="color:white;"> Powered by <img src="https://servir-rlcms.appspot.com/static/img/google.png" width="17%"> Earth Engine <img src="https://servir-rlcms.appspot.com/static/img/gee.png" width="7%"> </p>
+            <p style="color:green;"> Powered by <img src="https://servir-rlcms.appspot.com/static/img/google.png" width="17%"> Earth Engine <img src="https://servir-rlcms.appspot.com/static/img/gee.png" width="7%"> </p>
         </div>
     </div>
     <div id="zoom-attr" class="zoom-attr ol-unselectable ol-control">
@@ -120,7 +105,7 @@
     </div>
     <!--<div id="zoomlevel"></div>-->
 </div>
-<div id="layers" name="layers" data-ponds-mapid="{{ponds_mapid}}" data-ponds-token="{{ponds_token}}" style="display:none;">	
+<div id="layers" name="layers" data-ponds-mapid="{{ponds_mapid}}" data-ponds-token="{{ponds_token}}" data-region-mapid="{{region_mapid}}" data-region-token="{{region_token}}" data-commune-mapid="{{commune_mapid}}" data-commune-token="{{commune_token}}" data-arrondissement-mapid="{{arrondissement_mapid}}" data-arrondissement-token="{{arrondissement_token}}" data-mndwi-mapid="{{mndwiImg_mapid}}" data-mndwi-token="{{mndwiImg_token}}" style="display:none;">	
     {% endblock %}
     {# Use the after_app_content block for modals #}
     {% block after_app_content %}
@@ -163,12 +148,12 @@
                 <div id="graph" >
                     <input type="text" name="current-lat" id="current-lat" hidden>
                     <input type="text" name="current-lon" id="current-lon" hidden>
-
                     <br>
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" role="tablist">
                         <li role="presentation" class="active"><a id="historic" href="#historic_tab" aria-controls="historic_tab" role="tab" data-toggle="tab">Historic</a></li>
                         <li role="presentation" ><a id="forecast" href="#forecast_tab" aria-controls="forecast_tab" role="tab" data-toggle="tab">Forecast</a></li>
+                        <li role="presentation" ><a id="details" href="#details_tab" aria-controls="details_tab" role="tab" data-toggle="tab">Details</a></li>
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade in active" id="historic_tab">
@@ -184,7 +169,6 @@
                                 </div>
                             </div>
                         </div> <!-- /.tab-pane -->
-
                         <div role="tabpanel" class="tab-pane" id="forecast_tab">
                             <div class="panel panel-default">
                                 <div class="panel-body">
@@ -198,8 +182,20 @@
                                 </div>
                             </div>
                         </div> <!-- /.tab-pane -->
+                        <div role="tabpanel" class="tab-pane" id="details_tab">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <div class="chart-wrapper">
+                                        <div class="chart-inner" style="width:100%;height:75%;">
+                                            <div align="center"><h1>Détails sur la mare</h1></div>
+											<table id="meta-table-details" class="table table-responsive table-condensed table-hover">
+											</table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- /.tab-pane -->
                     </div>
-
                     <br>
                     <table id="meta-table" class="table table-responsive table-condensed table-hover">
                     </table>
@@ -207,15 +203,13 @@
                     <div id="layers_checkbox" class="checkbox hidden">
                         <label><input type="checkbox" id="true_toggle" name="true_toggle" checked>Natural-color Layer</label>&nbsp
                         <label><input type="checkbox" id="mndwi_toggle" name="mndwi_toggle" checked>MNDWI Layer</label>&nbsp
-                        <label><input type="checkbox" id="ponds_toggle" name="ponds_toggle" checked>Ponds Layer</label>
+                        <label><input type="checkbox" id="ponds_layer" name="ponds_layer" checked>Ponds Layer</label>
                     </div>
                     <br>
                     <span>Note: The zoom level needs to be 13 or greater to retrieve data.</span>
                     <br>
                     <button type="button" name="reset" id="reset" class="btn btn-primary hidden" onclick="window.location.reload();">Reset Map</button>
-
                 </div>
-
             </div>
         </div>
     </div>

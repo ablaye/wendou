@@ -6,13 +6,13 @@ class Waterwatch(TethysAppBase):
     Tethys app class for Water ENvironment for Observation in support of Users (WENDOU) in Ferlo, Senegal.
     """
 
-    name = 'Water ENvironment for Observation in support of Users (WENDOU) in Ferlo, Senegal'
+    name = 'WENDOU (Water ENvironment Dashboard for Observation in support of Users in Ferlo, Senegal)'
     index = 'waterwatch:home'
     icon = 'waterwatch/images/logo_2.png'
     package = 'waterwatch'
     root_url = 'waterwatch'
     color = '#2c3e50'
-    description = 'View Water ENvironment for Observation in support of Users (WENDOU) in Ferlo, Senegal'
+    description = 'View Water ENvironment Dashboard for Observation in support of Users (WENDOU) in Ferlo, Senegal'
     tags = 'Hydrology', 'Remote-Sensing'
     enable_feedback = False
     feedback_emails = []
@@ -40,6 +40,11 @@ class Waterwatch(TethysAppBase):
                 controller='waterwatch.ajax_controllers.forecast'
             ),
             UrlMap(
+                name='details',
+                url='waterwatch/details',
+                controller='waterwatch.ajax_controllers.details'
+            ),
+            UrlMap(
                 name='mnwdi',
                 url='waterwatch/mndwi',
                 controller='waterwatch.ajax_controllers.mndwi'
@@ -53,6 +58,21 @@ class Waterwatch(TethysAppBase):
                 name='getTimeseries',
                 url='waterwatch/api/getTimeseries',
                 controller='waterwatch.api.api_get_timeseries'
+            ),
+            UrlMap(
+                name='getRegion',
+                url='waterwatch/api/getRegion',
+                controller='waterwatch.api.api_get_region'
+            ),
+            UrlMap(
+                name='getCommune',
+                url='waterwatch/api/getCommune',
+                controller='waterwatch.api.api_get_commune'
+            ),
+            UrlMap(
+                name='getArrondissement',
+                url='waterwatch/api/getArrondissement',
+                controller='waterwatch.api.api_get_arrondissement'
             ),
         )
 

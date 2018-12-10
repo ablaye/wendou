@@ -20,9 +20,23 @@ except EEException as e:
 def addArea(feature):
     return feature.set('area',feature.area());
 
+
+studyArea = ee.Geometry.Rectangle([-15.866, 14.193, -12.990, 16.490])
+lc8 = ee.ImageCollection('LANDSAT/LC08/C01/T1_RT')
+st2 = ee.ImageCollection('COPERNICUS/S2')
+
+ponds = ee.FeatureCollection('projects/servir-wa/services/ephemeral_water_ferlo/ferlo_ponds')\
+                .map(addArea).filter(ee.Filter.gt("area",10000))
+region = ee.FeatureCollection('users/satigebelal/region')\
+				.map(addArea)
+commune = ee.FeatureCollection('users/satigebelal/commune')\
+				.map(addArea)
+arrondissement = ee.FeatureCollection('users/satigebelal/arrondissement')
+countries = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017')
+area_senegal = ee.FeatureCollection(countries).filter(ee.Filter.eq('country_na','Senegal'));
+
 def rescale(img, thresholds):
     return img.subtract(thresholds[0]).divide(thresholds[1] - thresholds[0])
-
 
 def s2CloudMask(img):
     score = ee.Image(1.0)
@@ -50,7 +64,6 @@ def s2CloudMask(img):
                                  'SUN_ZENITH',img.get('MEAN_SOLAR_ZENITH_ANGLE'),
                                  'scale',ee.Number(10))
 
-
 def lsCloudMask(img):
     blank = ee.Image(0)
     scored = ee.Algorithms.Landsat.simpleCloudScore(img)
@@ -60,7 +73,6 @@ def lsCloudMask(img):
     return img.updateMask(clouds).set("system:time_start", img.get("system:time_start"),
                    "SUN_ZENITH",ee.Number(90).subtract(img.get('SUN_ELEVATION')),
                    "scale",ee.Number(30))
-
 
 def simpleTDOM2(collection, zScoreThresh, shadowSumThresh, dilatePixels):
     def darkMask(img):
@@ -81,7 +93,6 @@ def simpleTDOM2(collection, zScoreThresh, shadowSumThresh, dilatePixels):
     collection = collection.map(darkMask)
 
     return collection
-
 
 def lsTOA(img):
     return ee.Algorithms.Landsat.TOA(img)
@@ -256,10 +267,12 @@ def getClickedImage(xValue,yValue,feature):
 
     equalDate = ee.Date(int(xValue))
 
-    true_image = ee.Image(mergedCollection.filterBounds(feature.geometry()).filterDate(equalDate,equalDate.advance(7    ,'day')).first())
+#    true_image = ee.Image(mergedCollection.filterBounds(area_senegal).filterDate(equalDate,equalDate.advance(7,'day')).first())
+    true_image = ee.Image(mergedCollection.filterDate(equalDate,equalDate.advance(7,'day')).first())
     true_imageid = true_image.getMapId({'min':0.05,'max':0.50,'gamma':1.5,'bands':'swir2,nir,green'})
 
-    water_image = ee.Image(waterCollection.select('mndwi').filterBounds(feature.geometry()).filterDate(equalDate,equalDate.advance(2,'day')).first())
+ #   water_image = ee.Image(waterCollection.select('mndwi').filterBounds(area_senegal).filterDate(equalDate,equalDate.advance(2,'day')).first())
+    water_image = ee.Image(waterCollection.select('mndwi').filterDate(equalDate,equalDate.advance(2,'day')).first())
     water_imageid = water_image.getMapId({'min':-0.2,'max':-0.05,'palette':'d3d3d3,84adff,9698d1,0000cc'})
 
     properties =  water_image.getInfo()['properties']
@@ -270,7 +283,6 @@ def accumGFS(collection,startDate,nDays):
   if (nDays>16):
     raise Warning('Max forecast days is 16, only producing forecast for 16 days...')
     nDays = 16
-
   cnt = 1
   imgList = []
   precipScale = ee.Image(1).divide(ee.Image(1e3))
@@ -280,11 +292,9 @@ def accumGFS(collection,startDate,nDays):
     for j in range(cnt,cntMax+1):
         forecastMeta.append(cnt)
         cnt+=1
-
     dayPrecip = collection.filter(ee.Filter.inList('forecast_hours', forecastMeta))
     imgList.append(dayPrecip.sum().multiply(precipScale)
       .set('system:time_start',startDate.advance(i,'day')))
-
   return ee.ImageCollection(imgList)
 
 def accumCFS(collection,startDate,nDays):
@@ -419,13 +429,7 @@ class fClass(object):
         pct = ee.Image(img.divide(ee.Image(self.pArea)).copyProperties(img,['system:time_start']))
         return pct.where(pct.gt(1),1)#.rename('pctArea')#
 
-studyArea = ee.Geometry.Rectangle([-15.866, 14.193, -12.990, 16.490])
-lc8 = ee.ImageCollection('LANDSAT/LC08/C01/T1_RT')
-st2 = ee.ImageCollection('COPERNICUS/S2')
-ponds = ee.FeatureCollection('projects/servir-wa/services/ephemeral_water_ferlo/ferlo_ponds')\
-                .map(addArea).filter(ee.Filter.gt("area",10000))
 today = time.strftime("%Y-%m-%d")
-
 iniTime = ee.Date('2015-01-01')
 endTime = ee.Date(today)
 
@@ -433,9 +437,9 @@ dilatePixels = 2;
 cloudHeights = ee.List.sequence(200,5000,500);
 zScoreThresh = -0.8;
 shadowSumThresh = 0.35;
-cloudThresh = 10
+cloudThresh = 10;
 
-mergedCollection = mergeCollections(lc8, st2, studyArea, iniTime, endTime).sort('system:time_start', False)
+mergedCollection = mergeCollections(lc8, st2, studyArea, iniTime, endTime).sort('system:time_start', False);
 
 mergedCollection = simpleTDOM2(mergedCollection, zScoreThresh, shadowSumThresh, dilatePixels)#.map(cloudProject)
 
@@ -447,22 +451,27 @@ ponds_cls = ponds.map(pondClassifier)
 
 visParams = {'min': 0, 'max': 3, 'palette': 'red,yellow,green,gray'}
 
-pondsImg = ponds_cls.reduceToImage(properties=['pondCls'],
-                                   reducer=ee.Reducer.first())
+pondsImg = ponds_cls.reduceToImage(properties=['pondCls'], reducer=ee.Reducer.first())
 
 pondsImgID = pondsImg.getMapId(visParams)
+regionImgID = region.getMapId()
+arrondissementImgID = arrondissement.getMapId()
+communeImgID = commune.getMapId()
 
 img = mergedCollection.median().clip(studyArea)
 
-mndwiImg = mndwiCollection.median().clip(studyArea)
+#mndwiImg = mndwiCollection.median().clip(studyArea)
+mndwiImg = mndwiCollection.select('mndwi').median().clip(area_senegal).getMapId({'min':-0.2,'max':-0.05,'palette':'d3d3d3,84adff,9698d1,0000cc'})
 
 gfs = ee.ImageCollection('NOAA/GFS0P25')
 cfs = ee.ImageCollection('NOAA/CFSV2/FOR6H').select(['Precipitation_rate_surface_6_Hour_Average'],['precip'])
 elv = ee.Image('USGS/SRTMGL1_003')
 
 def initLayers():
-    return pondsImgID
+    return pondsImgID, regionImgID, communeImgID, arrondissementImgID, mndwiImg
 
+def regionLayers():
+    return region
 
 def filterPond(lon, lat):
     point = ee.Geometry.Point(float(lon), float(lat))
@@ -473,6 +482,26 @@ def filterPond(lon, lat):
     selPond = ponds.filter(ee.Filter.eq('uniqID', computedValue))
 
     return selPond
+
+def filterDetails(lon, lat):
+    point = ee.Geometry.Point(float(lon), float(lat))
+    
+    sampledPoint = ee.Feature(ponds.filterBounds(point).first())
+    sampledRegion = ee.Feature(region.filterBounds(point).first())
+    sampledCommune = ee.Feature(commune.filterBounds(point).first())
+    sampledArrondissement = ee.Feature(arrondissement.filterBounds(point).first())
+
+    computedValuePonds = sampledPoint.getInfo()['properties']['uniqID']
+    computedValueRegion = sampledRegion.getInfo()['properties']['id_reg']
+    computedValueCommune = sampledCommune.getInfo()['properties']['id_com']
+    computedValueArrondissement = sampledArrondissement.getInfo()['properties']['id_arro']
+
+    selPond = ponds.filter(ee.Filter.eq('uniqID', computedValuePonds))
+    selRegion = ponds.filter(ee.Filter.eq('id_reg', computedValueRegion))
+    selCommune = ponds.filter(ee.Filter.eq('id_com', computedValueCommune))
+    selArrondissement = ponds.filter(ee.Filter.eq('id_arro', computedValueArrondissement))
+
+    return selPond, selRegion, selCommune, selArrondissement
 
 def checkFeature(lon,lat):
 
@@ -486,9 +515,7 @@ def checkFeature(lon,lat):
     coordinates = selPond.getInfo()['features'][0]['geometry']['coordinates']
     return ts_values,coordinates,name
 
-
 def forecastFeature(lon,lat):
-
     selPond = filterPond(lon,lat)
 
     featureImg = ee.Image(waterCollection.filterBounds(selPond).sort('system:time_start',False).first())
@@ -516,3 +543,65 @@ def getMNDWI(lon,lat,xValue,yValue):
 
     return mndwi_img
 
+def detailsFeature(lon,lat):
+    point = ee.Geometry.Point(float(lon), float(lat))
+    
+    sampledPoint = ee.Feature(ponds.filterBounds(point).first())
+    sampledRegion = ee.Feature(region.filterBounds(point).first())
+    sampledCommune = ee.Feature(commune.filterBounds(point).first())
+    sampledArrondissement = ee.Feature(arrondissement.filterBounds(point).first())
+
+    computedValuePonds = sampledPoint.getInfo()['properties']['uniqID']
+    computedValueRegion = sampledRegion.getInfo()['properties']['id_reg']
+    computedValueCommune = sampledCommune.getInfo()['properties']['id_com']
+    computedValueArrondissement = sampledArrondissement.getInfo()['properties']['id_arro']
+
+    selPond = ponds.filter(ee.Filter.eq('uniqID', computedValuePonds))
+    selRegion = ponds.filter(ee.Filter.eq('id_reg', computedValueRegion))
+    selCommune = ponds.filter(ee.Filter.eq('id_com', computedValueCommune))
+    selArrondissement = ponds.filter(ee.Filter.eq('id_arro', computedValueArrondissement))
+
+    return selPond, selRegion, selCommune, selArrondissement
+
+def filterRegion(lon, lat):
+	
+    point = ee.Geometry.Point(float(lon), float(lat))
+    sampledPoint = ee.Feature(region.filterBounds(point).first())
+
+    computedValue = sampledPoint.getInfo()['properties']['id_reg']
+
+    selRegion = region.filter(ee.Filter.eq('id_reg', computedValue))
+
+    return selRegion
+    
+def filterCommune(lon, lat):
+    point = ee.Geometry.Point(float(lon), float(lat))
+    sampledPoint = ee.Feature(commune.filterBounds(point).first())
+
+    computedValue = sampledPoint.getInfo()['properties']['id_com']
+
+    selCommune = commune.filter(ee.Filter.eq('id_com', computedValue))
+
+    return selCommune
+    
+def filterArrondissement(lon, lat):
+    point = ee.Geometry.Point(float(lon), float(lat))
+    sampledPoint = ee.Feature(arrondissement.filterBounds(point).first())
+
+    computedValue = sampledPoint.getInfo()['properties']['id_arro']
+
+    selArrondissement = arrondissement.filter(ee.Filter.eq('id_arro', computedValue))
+
+    return selArrondissement
+
+
+#def getClickedImage(xValue,yValue,feature):
+
+#    equalDate = ee.Date(int(xValue))
+
+ #   water_image = ee.Image(waterCollection.select('mndwi').filterBounds(feature.geometry()).filterDate(equalDate,equalDate.advance(2,'day')).first())
+  #  water_imageid = water_image.getMapId({'min':-0.2,'max':-0.05,'palette':'d3d3d3,84adff,9698d1,0000cc'})
+
+   # properties =  water_image.getInfo()['properties']
+
+    #return true_imageid,water_imageid,properties
