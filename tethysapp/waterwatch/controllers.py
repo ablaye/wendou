@@ -9,6 +9,7 @@ def home(request):
     """
     ponds, region, commune, arrondissement, mndwiImg = initLayers()
 
+    print('Ponds :',ponds['token']);
     context = {
         'ponds_mapid':ponds['mapid'],
         'ponds_token':ponds['token'],

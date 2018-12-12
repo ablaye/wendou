@@ -91,37 +91,6 @@ var LIBRARY_OBJECT = (function() {
             name:'base_map2'            
         });
 
-		var getText = function(feature) {
-			var text = feature.get('nom');
-			return text;
-		};
-
-		var createTextStyle = function(feature) {
-		  return new ol.style.Text({
-			textAlign: 'center',
-			textBaseline: 'middle',
-			font: '12px Verdana',
-			text: getText(feature),
-			fill: new ol.style.Fill({color: 'black'}),
-			stroke: new ol.style.Stroke({color: 'white', width: 0.5})
-		  });
-		};
-
-        var createPolygonStyleFunction = function() {
-			return function(feature) {
-				var style08 = new ol.style.Style({
-				  stroke: new ol.style.Stroke({
-					color: 'blue',
-					width: 1
-				  }),
-				  fill: new ol.style.Fill({
-					color: '#ff0000'
-				  }),
-				  text: createTextStyle(feature)
-				});
-				return style08;
-			};
-		};    
         var west_africa = new ol.Feature(new ol.geom.Polygon([[[-1600000,1580000],[-1370000,1580000],[-1370000,1860000],[-1800000,1860000],[-1800000,1580000]]]));
 
         var boundary_layer = new ol.layer.Vector({
@@ -136,10 +105,11 @@ var LIBRARY_OBJECT = (function() {
             visible: true,
             name:'boundary_layer'                     
         });
+
         var defaultStyles = [
 		   new ol.style.Style({
 				fill: new ol.style.Fill({
-					color: [203, 194, 185, 1]
+					color: 'white'
 				}),
 				stroke: new ol.style.Stroke({color: 'black', width: 2})
 		   })
@@ -263,8 +233,8 @@ var LIBRARY_OBJECT = (function() {
  //           if (zoom > 14){
   //              base_map2.setVisible(true);
    //         }else{
-     //           base_map2.setVisible(false);
-       //     }
+    //           base_map2.setVisible(false);
+     //       }
 
             // Object.keys(layersDict).forEach(function(key){
             //     var source =  layersDict[key].getSource();

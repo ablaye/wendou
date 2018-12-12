@@ -460,7 +460,6 @@ communeImgID = commune.getMapId()
 
 img = mergedCollection.median().clip(studyArea)
 
-#mndwiImg = mndwiCollection.median().clip(studyArea)
 mndwiImg = mndwiCollection.select('mndwi').median().clip(area_senegal).getMapId({'min':-0.2,'max':-0.05,'palette':'d3d3d3,84adff,9698d1,0000cc'})
 
 gfs = ee.ImageCollection('NOAA/GFS0P25')
@@ -593,15 +592,3 @@ def filterArrondissement(lon, lat):
     selArrondissement = arrondissement.filter(ee.Filter.eq('id_arro', computedValue))
 
     return selArrondissement
-
-
-#def getClickedImage(xValue,yValue,feature):
-
-#    equalDate = ee.Date(int(xValue))
-
- #   water_image = ee.Image(waterCollection.select('mndwi').filterBounds(feature.geometry()).filterDate(equalDate,equalDate.advance(2,'day')).first())
-  #  water_imageid = water_image.getMapId({'min':-0.2,'max':-0.05,'palette':'d3d3d3,84adff,9698d1,0000cc'})
-
-   # properties =  water_image.getInfo()['properties']
-
-    #return true_imageid,water_imageid,properties
