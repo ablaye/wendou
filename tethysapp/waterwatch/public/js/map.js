@@ -143,6 +143,7 @@ var LIBRARY_OBJECT = (function() {
             source: new ol.source.XYZ({
                 url: "https://earthengine.googleapis.com/map/"+commune_mapid+"/{z}/{x}/{y}?token="+commune_token
             }),
+            style: defaultStyles,
             visible: false,
             name:'commune_layer'
         });
@@ -150,6 +151,7 @@ var LIBRARY_OBJECT = (function() {
             source: new ol.source.XYZ({
                 url: "https://earthengine.googleapis.com/map/"+arrondissement_mapid+"/{z}/{x}/{y}?token="+arrondissement_token
             }),
+            style: defaultStyles,
             visible: false,
             name:'arrondissement_layer'
         });
