@@ -232,15 +232,6 @@ var LIBRARY_OBJECT = (function() {
             var zoom = map.getView().getZoom();
             var zoomInfo = '<p style="color:green;">Current Zoom level = ' + zoom.toFixed(3)+'.</p>';
             document.getElementById('zoomlevel').innerHTML = zoomInfo;
- //           if (zoom > 14){
-  //              base_map2.setVisible(true);
-   //         }else{
-    //           base_map2.setVisible(false);
-     //       }
-
-            // Object.keys(layersDict).forEach(function(key){
-            //     var source =  layersDict[key].getSource();
-            // });
         });
         map.on("singleclick",function(evt){
 

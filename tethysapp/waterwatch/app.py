@@ -1,4 +1,5 @@
 from tethys_sdk.base import TethysAppBase, url_map_maker
+from django.utils.translation import ugettext_lazy as _
 
 
 class Waterwatch(TethysAppBase):

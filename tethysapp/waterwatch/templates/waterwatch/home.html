@@ -1,4 +1,7 @@
 {% extends "waterwatch/base.html" %}
+
+{% load i18n %}
+
 {% load tethys_gizmos %}
 {% load staticfiles %}
 {% block styles %}
@@ -24,6 +27,24 @@
 <!--new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');-->
 <!--}-->
 <!--</script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>&nbsp-->
+<div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" >
+	<!--<form action="{% url 'set_language' %}" method="post"> -->
+	<ul>
+		<input type="hidden" name="next" value="{{ redirect_to }}">
+		<li><select name="language" id="">
+		{% get_available_languages as LANGUAGES %}
+		{% get_language_info_list for LANGUAGES as languages %}
+		{% for language in languages %}
+			<option value="{{ language.code }}" {% if language.code == LANGUAGE_CODE %} selected {% endif %}>
+				{{ language.name_local }} ({{ language.code }})
+			</option>
+		{% endfor %}
+
+		</select>
+		<input type="submit" value="Go"></li>
+	</ul>
+	<!--</form>-->
+</div>
 <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Reset" onClick="window.location.reload()">
     <a><span class="fa fa-refresh"></span></a>
 </div>
@@ -51,10 +72,10 @@
     }
 </style>
 <div class="coord-attr ol-unselectable ol-control">
-	<span style="color:green;">Coordonnees :</span> <p style="color:red;" id="coordonnees"></p>
+	<span style="color:green;">{% trans "coordinates :" %}</span> <p style="color:red;" id="coordonnees"></p>
 </div>
 <div id="menulayers" class="checkbox">
-	<h3 style="color:red;">Layers</h3>
+	<h3 style="color:red;">{% trans "Layers" %}</h3>
 	<ul>
 		<li><label><input type="checkbox" id="base_map" name="base_map" checked>Base Map 01</label>
 		<label><input type="checkbox" id="select_mndwi_layer" name="mndwi_layer" >MNDWI</label></li>&nbsp

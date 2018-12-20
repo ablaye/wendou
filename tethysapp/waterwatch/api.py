@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from django.utils.translation import ugettext_lazy as _
 import json
 from utilities import *
 
@@ -15,7 +16,7 @@ def api_get_ponds(request):
                 'success':'success'
             }
         except:
-            json_obj = {"Error": "Error Processing Request"}
+            json_obj = {"Error": _("Error Processing Request")}
 
     return  JsonResponse(json_obj)
 
@@ -32,7 +33,7 @@ def api_get_region(request):
                 'success':'success'
             }
         except:
-            json_obj = {"Error": "Error Processing Request"}
+            json_obj = {"Error": _("Error Processing Request")}
 
     return  JsonResponse(json_obj)
 
@@ -49,7 +50,7 @@ def api_get_commune(request):
                 'success':'success'
             }
         except:
-            json_obj = {"Error": "Error Processing Request"}
+            json_obj = {"Error": _("Error Processing Request")}
 
     return  JsonResponse(json_obj)
 
@@ -66,7 +67,7 @@ def api_get_arrondissement(request):
                 'success':'success'
             }
         except:
-            json_obj = {"Error": "Error Processing Request"}
+            json_obj = {"Error": _("Error Processing Request")}
 
     return  JsonResponse(json_obj)
 
@@ -88,7 +89,7 @@ def api_get_timeseries(request):
             json_obj["success"] = "success"
 
         except Exception as e:
-            json_obj["error"] = "Error Processing Request. Error: "+ str(e)
+            json_obj["error"] = _("Error Processing Request. Error: ")+ str(e)
     return JsonResponse(json_obj)
 
 def api_get_details(request):
@@ -111,6 +112,6 @@ def api_get_details(request):
             json_obj["success"] = "success"
 
         except Exception as e:
-            json_obj["error"] = "Error Processing Request. Error: "+ str(e)
+            json_obj["error"] = _("Error Processing Request. Error: ")+ str(e)
     return JsonResponse(json_obj)
 

@@ -5,6 +5,7 @@ import json
 import math
 import random
 import datetime,time
+from django.utils.translation import ugettext_lazy as _
 
 try:
     ee.Initialize()
