@@ -1,8 +1,17 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 from utilities import *
-from django.utils.translation import ugettext_lazy as _
 import json
+import os, sys
 from django.http import JsonResponse
 import datetime
+
+import gettext
+
+pathname= os.path.dirname(sys.argv[0])
+localdir = os.path.abspath(pathname) + "/locale"
+gettext.install("messages", localdir)
 
 def timeseries(request):
 
@@ -22,7 +31,7 @@ def timeseries(request):
             return_obj["success"] = "success"
 
         except Exception as e:
-            return_obj["error"] = "Error Processing Request. Error: "+ str(e)
+            return_obj["error"] = _("Error Processing Request. Error: ")+ str(e)
     return JsonResponse(return_obj)
 
 def forecast(request):
@@ -41,9 +50,9 @@ def forecast(request):
         return_obj["name"] = name
         return_obj["success"] = "success"
     except Exception as e:
-        return_obj["error"] = "Error Processing Request. Error: "+ str(e)
+        return_obj["error"] = _("Error Processing Request. Error: ")+ str(e)
 
-    print("processing complete...")
+    print(_("processing complete..."))
 
     return JsonResponse(return_obj)
 
@@ -72,7 +81,7 @@ def mndwi(request):
             return_obj["success"] = "success"
 
         except Exception as e:
-            return_obj["error"] = "Error Processing Request. Error: "+ str(e)
+            return_obj["error"] = _("Error Processing Request. Error: ")+ str(e)
 
     return JsonResponse(return_obj)
 
@@ -92,7 +101,7 @@ def details(request):
             arrondissement = filterArrondissement(lon,lat)
             namePond = ponds.getInfo()['features'][0]['properties']['Nom']
             if len(namePond) < 2:
-                namePond = ' Unnamed Pond'
+                namePond = _('Unnamed Pond')
 
             coordinates = ponds.getInfo()['features'][0]['geometry']['coordinates']
 
@@ -109,8 +118,8 @@ def details(request):
             return_obj["nameArrondissement"] = nameArrondissement
             return_obj["success"] = "success"
         except Exception as e:
-            return_obj["error"] = "Error Processing Request. Error: "+ str(e)
-        print("processing complete...")
+            return_obj["error"] = _("Error Processing Request. Error: ")+ str(e)
+        print(_("processing complete..."))
 
     return JsonResponse(return_obj)
 

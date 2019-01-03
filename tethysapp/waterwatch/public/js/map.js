@@ -230,7 +230,7 @@ var LIBRARY_OBJECT = (function() {
         //Map on zoom function. To keep track of the zoom level. Data can only be viewed can only be added at a certain zoom level.
         map.on("moveend", function() {
             var zoom = map.getView().getZoom();
-            var zoomInfo = '<p style="color:green;">Current Zoom level = ' + zoom.toFixed(3)+'.</p>';
+            var zoomInfo = '<p style="color:green;">Niveau de zoom actuel = ' + zoom.toFixed(3)+'.</p>';
             document.getElementById('zoomlevel').innerHTML = zoomInfo;
         });
         map.on("singleclick",function(evt){
@@ -238,7 +238,7 @@ var LIBRARY_OBJECT = (function() {
             var zoom = map.getView().getZoom();
             $chartModal.modal('show');
             if (zoom < 14){
-                $('.info').html('<b>The zoom level has to be 14 or greater. Please check and try again.</b>');
+                $('.info').html('<b>Le niveau de zoom doit être de 14 ou plus. S\'il vous plaît, vérifiez et essayez à nouveau.</b>');
                 $('#info').removeClass('hidden');
                 return false;
             }else{
@@ -277,7 +277,7 @@ var LIBRARY_OBJECT = (function() {
                     $("#plotter").removeClass('hidden');
 
                 }else{
-                    $('.info').html('<b>Error processing the request. Please be sure to click on a feature.'+data.error+'</b>');
+                    $('.info').html('<b>Erreur lors du traitement de la demande. Assurez-vous de cliquer sur une fonctionnalité.'+data.error+'</b>');
                     $('#info').removeClass('hidden');
                     $loading.addClass('hidden');
                 }
@@ -300,7 +300,7 @@ var LIBRARY_OBJECT = (function() {
                     $("#forecast-plotter").removeClass('hidden');
 
                 }else{
-                    $('.info').html('<b>Error processing the request. Please be sure to click on a feature.'+data.error+'</b>');
+                    $('.info').html('<b>Erreur lors du traitement de la demande. Assurez-vous de cliquer sur une fonctionnalité.'+data.error+'</b>');
                     $('#info').removeClass('hidden');
                     $loadingF.addClass('hidden');
                 }
@@ -322,7 +322,7 @@ var LIBRARY_OBJECT = (function() {
   //                  $("#details-plotter").removeClass('hidden');
 
                 }else{
-                    $('.info').html('<b>Error processing the request. Please be sure to click on a feature.'+data.error+'</b>');
+                    $('.info').html('<b>Erreur lors du traitement de la demande. Assurez-vous de cliquer sur une fonctionnalité.'+data.error+'</b>');
                     $('#info').removeClass('hidden');
                     $loadingF.addClass('hidden');
                 }
@@ -364,11 +364,11 @@ var LIBRARY_OBJECT = (function() {
                                     if("success" in data) {
                                         map.getLayers().item(3).getSource().setUrl("https://earthengine.googleapis.com/map/"+data.true_mapid+"/{z}/{x}/{y}?token="+data.true_token);
                                         map.getLayers().item(4).getSource().setUrl("https://earthengine.googleapis.com/map/"+data.water_mapid+"/{z}/{x}/{y}?token="+data.water_token);
-                                        $("#meta-table").append('<tbody><tr><th>Latitude</th><td>'+(parseFloat(lat).toFixed(6))+'</td></tr><tr><th>Longitude</th><td>'+(parseFloat(lon).toFixed(6))+'</td></tr><tr><th>Current Date</th><td>'+data.date+'</td></tr><tr><th>Scene Cloud Cover</th><td>'+data.cloud_cover+'</td></tr></tbody>');
+                                        $("#meta-table").append('<tbody><tr><th>Latitude</th><td>'+(parseFloat(lat).toFixed(6))+'</td></tr><tr><th>Longitude</th><td>'+(parseFloat(lon).toFixed(6))+'</td></tr><tr><th>Date actuelle</th><td>'+data.date+'</td></tr><tr><th>Couverture nuageuse</th><td>'+data.cloud_cover+'</td></tr></tbody>');
                                         $("#reset").removeClass('hidden');
                                         $("#layers_checkbox").removeClass('hidden');
                                     }else{
-                                        $('.info').html('<b>Error processing the request. Please be sure to click on a feature.'+data.error+'</b>');
+                                        $('.info').html('<b>Erreur lors du traitement de la demande. Assurez-vous de cliquer sur une fonctionnalité.'+data.error+'</b>');
                                         $('#info').removeClass('hidden');
                                         $("#layers_checkbox").addClass('hidden');
                                     }
@@ -380,7 +380,7 @@ var LIBRARY_OBJECT = (function() {
                 }
             },
             title: {
-                text:'Percent coverage of water at '+(name)+' ('+(lon.toFixed(3))+','+(lat.toFixed(3))+')'
+                text:'% de couverture en eau à '+(name)+' ('+(lon.toFixed(3))+','+(lat.toFixed(3))+')'
                 // style: {
                 //     fontSize: '13px',
                 //     fontWeight: 'bold'
@@ -408,7 +408,7 @@ var LIBRARY_OBJECT = (function() {
             },
             series: [{
                 data:data,
-                name: 'Historical percent coverage of water'
+                name: 'Couverture historique en pourcentage d\'eau'
             }]
         });
     };
@@ -440,11 +440,11 @@ var LIBRARY_OBJECT = (function() {
                                   if("success" in data) {
                                       map.getLayers().item(3).getSource().setUrl("https://earthengine.googleapis.com/map/"+data.true_mapid+"/{z}/{x}/{y}?token="+data.true_token);
                                       map.getLayers().item(4).getSource().setUrl("https://earthengine.googleapis.com/map/"+data.water_mapid+"/{z}/{x}/{y}?token="+data.water_token);
-                                      $("#meta-table").append('<tbody><tr><th>Latitude</th><td>'+(parseFloat(lat).toFixed(6))+'</td></tr><tr><th>Longitude</th><td>'+(parseFloat(lon).toFixed(6))+'</td></tr><tr><th>Current Date</th><td>'+data.date+'</td></tr><tr><th>Scene Cloud Cover</th><td>'+data.cloud_cover+'</td></tr></tbody>');
+                                      $("#meta-table").append('<tbody><tr><th>Latitude</th><td>'+(parseFloat(lat).toFixed(6))+'</td></tr><tr><th>Longitude</th><td>'+(parseFloat(lon).toFixed(6))+'</td></tr><tr><th>Date actuelle</th><td>'+data.date+'</td></tr><tr><th>Couverture nuageuse</th><td>'+data.cloud_cover+'</td></tr></tbody>');
                                       $("#reset").removeClass('hidden');
                                       $("#layers_checkbox").removeClass('hidden');
                                   }else{
-                                      $('.info').html('<b>Error processing the request. Please be sure to click on a feature.'+data.error+'</b>');
+                                      $('.info').html('<b>Erreur lors du traitement de la demande. Assurez-vous de cliquer sur une fonctionnalité.'+data.error+'</b>');
                                       $('#info').removeClass('hidden');
                                       $("#layers_checkbox").addClass('hidden');
                                   }
@@ -456,7 +456,7 @@ var LIBRARY_OBJECT = (function() {
               }
           },
           title: {
-              text:'Percent coverage of water at '+(name)+' ('+(lon.toFixed(3))+','+(lat.toFixed(3))+')'
+              text:'% de couverture en eau à '+(name)+' ('+(lon.toFixed(3))+','+(lat.toFixed(3))+')'
               // style: {
               //     fontSize: '13px',
               //     fontWeight: 'bold'
@@ -490,7 +490,7 @@ var LIBRARY_OBJECT = (function() {
   };
     generate_details = function(lat,lon,namePond,sup_Pond,coordinates,nameRegion,nameCommune,nameArrondissement){
         $("#meta-table-details").html('');
-        $("#meta-table-details").append('<tbody><tr><th>Latitude</th><td>'+(lat.toFixed(6))+'</td></tr><tr><th>Longitude</th><td>'+(lon.toFixed(6))+'</td></tr><tr><th>Nom Pond</th><td>'+namePond+'</td></tr><tr><th>Area Pond</th><td>'+sup_Pond+'</td></tr><tr><th>Nom Region</th><td>'+nameRegion+'</td></tr><tr><th>Nom Region</th><td>'+nameArrondissement+'</td></tr><tr><th>Nom Region</th><td>'+nameCommune+'</td></tr></tbody>');
+        $("#meta-table-details").append('<tbody><tr><th>Latitude</th><td>'+(lat.toFixed(6))+'</td></tr><tr><th>Longitude</th><td>'+(lon.toFixed(6))+'</td></tr><tr><th>Nom Mare</th><td>'+namePond+'</td></tr><tr><th>Superficie</th><td>'+sup_Pond+'</td></tr><tr><th>Nom région</th><td>'+nameRegion+'</td></tr><tr><th>Nom arrondissement</th><td>'+nameArrondissement+'</td></tr><tr><th>Nom commune</th><td>'+nameCommune+'</td></tr></tbody>');
         $("#reset").removeClass('hidden');
 
     };
