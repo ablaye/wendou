@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 import ee
 from ee.ee_exception import EEException
 import requests
@@ -5,7 +8,13 @@ import json
 import math
 import random
 import datetime,time
-from django.utils.translation import ugettext_lazy as _
+import os, sys
+import gettext
+
+pathname= os.path.dirname(sys.argv[0])
+localdir = os.path.abspath(pathname) + "/locale/fr_FR/LC_MESSAGES"
+gettext.install("messages", localdir)
+
 
 try:
     ee.Initialize()
@@ -282,7 +291,7 @@ def getClickedImage(xValue,yValue,feature):
 
 def accumGFS(collection,startDate,nDays):
   if (nDays>16):
-    raise Warning('Max forecast days is 16, only producing forecast for 16 days...')
+    raise Warning(_('Max forecast days is 16, only producing forecast for 16 days...'))
     nDays = 16
   cnt = 1
   imgList = []
@@ -510,7 +519,7 @@ def checkFeature(lon,lat):
     ts_values = makeTimeSeries(waterCollection,selPond,key='water',hasMask=True)
     name = selPond.getInfo()['features'][0]['properties']['Nom']
     if len(name) < 2:
-        name = ' Unnamed Pond'
+        name = _('Unnamed Pond')
 
     coordinates = selPond.getInfo()['features'][0]['geometry']['coordinates']
     return ts_values,coordinates,name
@@ -529,7 +538,7 @@ def forecastFeature(lon,lat):
     ts_values = fModel.forecast()
     name = selPond.getInfo()['features'][0]['properties']['Nom']
     if len(name) < 2:
-        name = ' Unnamed Pond'
+        name = _('Unnamed Pond')
 
     coordinates = selPond.getInfo()['features'][0]['geometry']['coordinates']
 

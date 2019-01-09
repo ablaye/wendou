@@ -1,5 +1,14 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+
 from tethys_sdk.base import TethysAppBase, url_map_maker
-from django.utils.translation import ugettext_lazy as _
+import os, sys
+import gettext
+
+pathname= os.path.dirname(sys.argv[0])
+localdir = os.path.abspath(pathname) + "/locale/fr_FR/LC_MESSAGES"
+gettext.install("messages", localdir)
 
 
 class Waterwatch(TethysAppBase):
@@ -7,13 +16,13 @@ class Waterwatch(TethysAppBase):
     Tethys app class for Water ENvironment for Observation in support of Users (WENDOU) in Ferlo, Senegal.
     """
 
-    name = 'WENDOU (Water ENvironment Dashboard for Observation in support of Users in Ferlo, Senegal)'
+    name = _('WENDOU (Water ENvironment Dashboard for Observation in support of Users in Ferlo, Senegal)')
     index = 'waterwatch:home'
     icon = 'waterwatch/images/logo_2.png'
     package = 'waterwatch'
     root_url = 'waterwatch'
     color = '#2c3e50'
-    description = 'View Water ENvironment Dashboard for Observation in support of Users (WENDOU) in Ferlo, Senegal'
+    description = _('View Water ENvironment Dashboard for Observation in support of Users (WENDOU) in Ferlo, Senegal')
     tags = 'Hydrology', 'Remote-Sensing'
     enable_feedback = False
     feedback_emails = []

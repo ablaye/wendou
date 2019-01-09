@@ -1,7 +1,16 @@
-from django.http import JsonResponse
-from django.utils.translation import ugettext_lazy as _
-import json
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 from utilities import *
+import json
+import os, sys
+from django.http import JsonResponse
+
+import gettext
+
+pathname= os.path.dirname(sys.argv[0])
+localdir = os.path.abspath(pathname) + "/locale/fr_FR/LC_MESSAGES"
+gettext.install("messages", localdir)
 
 def api_get_ponds(request):
 
