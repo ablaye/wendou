@@ -1,0 +1,57 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#: utilities.py:21 utilities.py:22
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-12-20 16:04+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+
+#: api.py:22 api.py:39 api.py:56 api.py:73 api.py:95 api.py:118
+#: ajax_controllers.py:28 ajax_controllers.py:48 ajax_controllers.py:78
+#: ajax_controllers.py:116
+msgid "success"
+msgstr "success"
+
+#: api.py:25 api.py:42 api.py:59 api.py:76
+msgid "Error Processing Request"
+msgstr "Erreur lors du traitement de la demande"
+
+#: api.py:98 api.py:121 ajax_controllers.py:31 ajax_controllers.py:50
+#: ajax_controllers.py:81 ajax_controllers.py:118
+msgid "Error Processing Request. Error: "
+msgstr "Erreur lors du traitement de la demande. Erreur:"
+
+#: ajax_controllers.py:52 ajax_controllers.py:119
+msgid "processing complete..."
+msgstr "traitement terminé ..."
+
+#: ajax_controllers.py:101 utilities.py:519 utilities.py:538
+msgid "Unnamed Pond"
+msgstr "Mare sans nom"
+
+#: app.py:15
+msgid "WENDOU (Water ENvironment Dashboard for Observation in support of Users in Ferlo, Senegal)"
+msgstr "WENDOU(Tableau de bord environnemental for l observation de l'eau dans le Ferlo à l appui des utilisateurs, Sénégal)"
+
+#: app.py:21
+msgid "View Water ENvironment Dashboard for Observation in support of Users (WENDOU) in Ferlo, Senegal"
+msgstr "Vue Tableau de bord environnemental for l observation de l'eau dans le Ferlo a l appui des utilisateurs, Sénégal"
+
+#: utilities.py:291
+msgid "Max forecast days is 16, only producing forecast for 16 days..."
+msgstr "Le nombre maximal de jours de prévision est de 16, ce qui ne produit que les prévisions pour 16 jours"
+
+
