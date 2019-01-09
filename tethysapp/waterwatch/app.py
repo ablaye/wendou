@@ -10,6 +10,7 @@ pathname= os.path.dirname(sys.argv[0])
 localdir = os.path.abspath(pathname) + "/locale/fr_FR/LC_MESSAGES"
 gettext.install("messages", localdir)
 
+print (localdir)
 
 class Waterwatch(TethysAppBase):
     """

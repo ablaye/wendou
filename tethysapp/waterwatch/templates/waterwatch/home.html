@@ -72,10 +72,10 @@
     }
 </style>
 <div class="coord-attr ol-unselectable ol-control">
-	<span style="color:green;">{% trans "coordinates :" %}</span> <p style="color:red;" id="coordonnees"></p>
+	<span style="color:green;">{% trans "coordonnées :" %}</span> <p style="color:red;" id="coordonnees"></p>
 </div>
 <div id="menulayers" class="checkbox">
-	<h3 style="color:red;">{% trans "Layers" %}</h3>
+	<h3 style="color:red;">{% trans "Couches" %}</h3>
 	<ul>
 		<li><label><input type="checkbox" id="base_map" name="base_map" checked>Base Map 01</label>
 		<label><input type="checkbox" id="select_mndwi_layer" name="mndwi_layer" >MNDWI</label></li>&nbsp
@@ -89,7 +89,7 @@
     <div align="center">
         <button id="close_map_intro_message" type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-        Zoom into an area of interest and click on a pond. The zoom level has to be greater than 14. <br> The basemaps will switch at zoom level 14.
+        Zoomez sur une zone d'intérêt et cliquez sur une mare. <br>
     </div>
 </div>
 <div id="map" class="map">
@@ -99,21 +99,21 @@
                  xmlns="http://www.w3.org/2000/svg">
                 <circle cx="20" cy="20" r="20" stroke="red" fill="red" stroke-width="2"/>
             </svg>
-            <span style="color:green;">< 25% Water Coverage</span>
+            <span style="color:green;">< 25% Couverture d'eau</span>
         </div>
         <div>
             <svg width="20" height="20" viewPort="0 0 20 20" version="1.1"
                  xmlns="http://www.w3.org/2000/svg">
                 <circle cx="20" cy="20" r="20" stroke="yellow" fill="yellow" stroke-width="2"/>
             </svg>
-            <span style="color:green;">25% to 75% Water Coverage</span>
+            <span style="color:green;">25% to 75% Couverture d'eau</span>
         </div>
         <div>
             <svg width="20" height="20" viewPort="0 0 20 20" version="1.1"
                  xmlns="http://www.w3.org/2000/svg">
                 <circle cx="20" cy="20" r="20" stroke="green" fill="green" stroke-width="2"/>
             </svg>
-            <span style="color:green;">> 75% Water Coverage</span>
+            <span style="color:green;">> 75% Couverture d'eau</span>
         </div>
     </div>
     <div id="gee-attr" class="gee-attr ol-unselectable ol-control">
@@ -136,12 +136,12 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h5 class="modal-title" id="help-modal-label">Help Modal</h5>
+                    <h5 class="modal-title" id="help-modal-label">Aide</h5>
                 </div>
                 <div class="modal-body">
-                    <h1>Disclaimer:</h1>
-                    <p>This application is currently in Beta. It is not to be used for any operational purpose.The SERVIR Project, NASA, and USAID, make no express or implied warranty of this application and associated data as to the merchantability or fitness for a particular purpose. Neither the US Government nor its contractors shall be liable for special, consequential or incidental damages attributed to this application and associated data.</p>
-                    <p><a href="https://servirglobal.net/Privacy-Terms-of-Use" target="_blank">Privacy and Terms of Use</a></p>
+                    <h1>Avertissement:</h1>
+                    <p>Cette application est actuellement en version bêta. Il ne doit pas être utilisé à des fins opérationnelles. Le projet SERVIR, la NASA et l'USAID ne donnent aucune garantie, expresse ou implicite, de cette application et des données associées quant à la qualité marchande ou à l'adéquation à un usage particulier. Ni le gouvernement américain ni ses sous-traitants ne sauraient être tenus pour responsables des dommages spéciaux, consécutifs ou accidentels attribués à cette application et aux données associées.</p>
+                    <p><a href="https://servirglobal.net/Privacy-Terms-of-Use" target="_blank">Confidentialité et conditions d'utilisation</a></p>
                 </div>
                 <div class="modal-footer">
                     <div align="center" id="logos">
@@ -222,12 +222,12 @@
                     </table>
                     <div id="info" class="hidden info"></div>
                     <div id="layers_checkbox" class="checkbox hidden">
-                        <label><input type="checkbox" id="true_toggle" name="true_toggle" checked>Natural-color Layer</label>&nbsp
-                        <label><input type="checkbox" id="mndwi_toggle" name="mndwi_toggle" checked>MNDWI Layer</label>&nbsp
+                        <label><input type="checkbox" id="true_toggle" name="true_toggle" >Natural-color Layer</label>&nbsp
+                        <label><input type="checkbox" id="mndwi_toggle" name="mndwi_toggle" >MNDWI Layer</label>&nbsp
                         <label><input type="checkbox" id="ponds_layer" name="ponds_layer" checked>Ponds Layer</label>
                     </div>
                     <br>
-                    <span>Note: The zoom level needs to be 13 or greater to retrieve data.</span>
+                    <span>Remarque: le niveau de zoom doit être de 13 ou plus pour récupérer les données.</span>
                     <br>
                     <button type="button" name="reset" id="reset" class="btn btn-primary hidden" onclick="window.location.reload();">Reset Map</button>
                 </div>
