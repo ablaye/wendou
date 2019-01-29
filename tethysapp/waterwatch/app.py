@@ -85,7 +85,11 @@ class Waterwatch(TethysAppBase):
                 url='waterwatch/api/getArrondissement',
                 controller='waterwatch.api.api_get_arrondissement'
             ),
+            UrlMap(
+                name='getVillage',
+                url='waterwatch/api/getVillage',
+                controller='waterwatch.api.api_get_village'
+            ),
         )
-
         return url_maps
 

@@ -44,6 +44,7 @@ commune = ee.FeatureCollection('users/satigebelal/commune')\
 arrondissement = ee.FeatureCollection('users/satigebelal/arrondissement')
 countries = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017')
 area_senegal = ee.FeatureCollection(countries).filter(ee.Filter.eq('country_na','Senegal'));
+village = ee.FeatureCollection('users/satigebelal/Village');
 
 def rescale(img, thresholds):
     return img.subtract(thresholds[0]).divide(thresholds[1] - thresholds[0])
@@ -467,6 +468,7 @@ pondsImgID = pondsImg.getMapId(visParams)
 regionImgID = region.getMapId()
 arrondissementImgID = arrondissement.getMapId()
 communeImgID = commune.getMapId()
+villageImgID = village.getMapId()
 
 img = mergedCollection.median().clip(studyArea)
 
@@ -477,10 +479,16 @@ cfs = ee.ImageCollection('NOAA/CFSV2/FOR6H').select(['Precipitation_rate_surface
 elv = ee.Image('USGS/SRTMGL1_003')
 
 def initLayers():
-    return pondsImgID, regionImgID, communeImgID, arrondissementImgID, mndwiImg
+    return pondsImgID, regionImgID, communeImgID, arrondissementImgID, mndwiImg, villageImgID
 
 def regionLayers():
     return region
+def communeLayers():
+    return commune
+def arrondissementLayers():
+    return arrondissement
+def villageLayers():
+    return village
 
 def filterPond(lon, lat):
     point = ee.Geometry.Point(float(lon), float(lat))
@@ -602,3 +610,14 @@ def filterArrondissement(lon, lat):
     selArrondissement = arrondissement.filter(ee.Filter.eq('id_arro', computedValue))
 
     return selArrondissement
+
+def filterVillage(lon, lat):
+	
+    point = ee.Geometry.Point(float(lon), float(lat))
+    sampledPoint = ee.Feature(village.filterBounds(point).first())
+
+    computedValue = sampledPoint.getInfo()['properties']['OBJECTID']
+
+    selVillage = village.filter(ee.Filter.eq('OBJECTID', computedValue))
+
+    return selVillage

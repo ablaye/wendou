@@ -8,9 +8,8 @@ def home(request):
     """
     Controller for the app home page.
     """
-    ponds, region, commune, arrondissement, mndwiImg = initLayers()
+    ponds, region, commune, arrondissement, mndwiImg, village = initLayers()
 
-    print('Ponds :',ponds['token']);
     context = {
         'ponds_mapid':ponds['mapid'],
         'ponds_token':ponds['token'],
@@ -21,6 +20,8 @@ def home(request):
         'arrondissement_mapid':arrondissement['mapid'],
         'arrondissement_token':arrondissement['token'],
         'mndwiImg_mapid':mndwiImg['mapid'],
-        'mndwiImg_token':mndwiImg['token']
+        'mndwiImg_token':mndwiImg['token'],
+        'village_mapid':village['mapid'],
+        'village_token':village['token']
     }
     return render(request, 'waterwatch/home.html', context)

@@ -30,6 +30,8 @@ var LIBRARY_OBJECT = (function() {
         arrondissement_token,
         mndwi_mapid,
         mndwi_token,
+        village_mapid,
+        village_token,
         public_interface,				// Object returned by the module
         select_feature_source,
         select_feature_layer,
@@ -66,12 +68,16 @@ var LIBRARY_OBJECT = (function() {
         arrondissement_token = $layers_element.attr('data-arrondissement-token');
         mndwi_mapid = $layers_element.attr('data-mndwi-mapid');
         mndwi_token = $layers_element.attr('data-mndwi-token');
+        village_mapid = $layers_element.attr('data-village-mapid');
+        village_token = $layers_element.attr('data-village-token');
         $chartModal = $("#chart-modal");
     };
     init_map = function(){
         var attribution = new ol.Attribution({
             html: 'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/rest/services/">ArcGIS</a>'
         });
+        console.log(village_mapid);
+        console.log(village_token);
         var base_map = new ol.layer.Tile({
             crossOrigin: 'anonymous',
             source: new ol.source.XYZ({
@@ -102,10 +108,18 @@ var LIBRARY_OBJECT = (function() {
                     width: 1
                 })
             }),
-            visible: true,
+            visible: false,
             name:'boundary_layer'                     
         });
-
+		var namestyle = new ol.style.Style({
+			text: new ol.style.Text({
+			  font: '20px Verdana',
+			  text: 'TZ',
+			  fill: new ol.style.Fill({
+				color: [64, 64, 64, 0.75]
+			  })
+			})
+		});
         var defaultStyles = [
 		   new ol.style.Style({
 				fill: new ol.style.Fill({
@@ -128,14 +142,16 @@ var LIBRARY_OBJECT = (function() {
             source: new ol.source.XYZ({
                 url: "https://earthengine.googleapis.com/map/"+ponds_mapid+"/{z}/{x}/{y}?token="+ponds_token
             }),
+            zIndex: 1000,
             visible: true,
             name:'ponds_layer'
         });
+        console.log(ponds_layer)
          var region_layer = new ol.layer.Tile({
             source: new ol.source.XYZ({
                 url: "https://earthengine.googleapis.com/map/"+region_mapid+"/{z}/{x}/{y}?token="+region_token
             }),
-            style: defaultStyles,
+            style: namestyle,
             visible: false,
             name:'region_layer'
         });
@@ -143,7 +159,6 @@ var LIBRARY_OBJECT = (function() {
             source: new ol.source.XYZ({
                 url: "https://earthengine.googleapis.com/map/"+commune_mapid+"/{z}/{x}/{y}?token="+commune_token
             }),
-            style: defaultStyles,
             visible: false,
             name:'commune_layer'
         });
@@ -151,9 +166,15 @@ var LIBRARY_OBJECT = (function() {
             source: new ol.source.XYZ({
                 url: "https://earthengine.googleapis.com/map/"+arrondissement_mapid+"/{z}/{x}/{y}?token="+arrondissement_token
             }),
-            style: defaultStyles,
             visible: false,
             name:'arrondissement_layer'
+        });
+         var village_layer = new ol.layer.Tile({
+            source: new ol.source.XYZ({
+                url: "https://earthengine.googleapis.com/map/"+village_mapid+"/{z}/{x}/{y}?token="+village_token
+            }),
+            visible: false,
+            name:'village_layer'
         });
         select_feature_source = new ol.source.Vector();
         select_feature_layer = new ol.layer.Vector({
@@ -178,7 +199,7 @@ var LIBRARY_OBJECT = (function() {
             // url:""
         });
 
-        layers = [base_map,mndwi_layer,ponds_layer,true_layer,water_layer,select_feature_layer,region_layer,commune_layer,arrondissement_layer];
+        layers = [base_map,mndwi_layer,ponds_layer,true_layer,water_layer,select_feature_layer,region_layer,commune_layer,arrondissement_layer,village_layer,boundary_layer];
         map = new ol.Map({
 			target: 'map',
 			controls: ol.control.defaults().extend([
@@ -190,7 +211,7 @@ var LIBRARY_OBJECT = (function() {
             view: new ol.View({
                 center: ol.proj.fromLonLat([-14.222,15.2]),
                 zoom: 8,
-                maxZoom: 19,
+                maxZoom: 16,
                 minZoom:2
             })
         });       
@@ -538,7 +559,7 @@ var LIBRARY_OBJECT = (function() {
                 map.getLayers().item(0).setVisible(false);
             }
         });
-        $('#base_map2').change(function() {
+        $('#select_mndwi_layer').change(function() {
             // this will contain a reference to the checkbox
             if (this.checked) {
                 map.getLayers().item(1).setVisible(true);
@@ -594,12 +615,20 @@ var LIBRARY_OBJECT = (function() {
                 map.getLayers().item(8).setVisible(false);
             }
         });
-        $('#select_mndwi_layer').change(function() {
+        $('#select_village_layer').change(function() {
             // this will contain a reference to the checkbox
             if (this.checked) {
-                map.getLayers().item(1).setVisible(true);
+                map.getLayers().item(9).setVisible(true);
             } else {
-                map.getLayers().item(1).setVisible(false);
+                map.getLayers().item(9).setVisible(false);
+            }
+        });
+        $('#boundary_layer').change(function() {
+            // this will contain a reference to the checkbox
+            if (this.checked) {
+                map.getLayers().item(10).setVisible(true);
+            } else {
+                map.getLayers().item(10).setVisible(false);
             }
         });
     });
