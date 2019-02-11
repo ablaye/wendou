@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-
+from tethys_sdk.app_settings import SpatialDatasetServiceSetting
 from tethys_sdk.base import TethysAppBase, url_map_maker
 import os, sys
 import gettext
@@ -92,4 +92,18 @@ class Waterwatch(TethysAppBase):
             ),
         )
         return url_maps
+    def spatial_dataset_service_settings(self):
+        """
+        Example spatial_dataset_service_settings method.
+        """
+        sds_settings = (
+            SpatialDatasetServiceSetting(
+                name='geoserver_tethys',
+                description='service de jeu de données spatiales à utiliser par l\'application',
+                engine=SpatialDatasetServiceSetting.GEOSERVER,
+                required=True,
+            ),
+        )
+
+        return sds_settings
 
