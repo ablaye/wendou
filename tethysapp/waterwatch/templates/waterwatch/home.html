@@ -127,6 +127,14 @@
         <div id="zoomlevel"></div>
     </div>
     <!--<div id="zoomlevel"></div>-->
+	<h1>GeoServer Layers</h1>
+	<form method="post">
+		{% csrf_token %}
+		{% gizmo select_input select_options %}
+		<input name="submit" type="submit" value="Update" class="btn btn-default">
+	</form>
+	{% gizmo map_options %}
+
 </div>
 <div id="layers" name="layers" data-ponds-mapid="{{ponds_mapid}}" data-ponds-token="{{ponds_token}}" data-region-mapid="{{region_mapid}}" data-region-token="{{region_token}}" data-commune-mapid="{{commune_mapid}}" data-commune-token="{{commune_token}}" data-arrondissement-mapid="{{arrondissement_mapid}}" data-arrondissement-token="{{arrondissement_token}}" data-mndwi-mapid="{{mndwiImg_mapid}}" data-mndwi-token="{{mndwiImg_token}}" data-village-mapid="{{village_mapid}}" data-village-token="{{village_token}}" style="display:none;">	
     {% endblock %}

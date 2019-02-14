@@ -76,8 +76,6 @@ var LIBRARY_OBJECT = (function() {
         var attribution = new ol.Attribution({
             html: 'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/rest/services/">ArcGIS</a>'
         });
-        console.log(village_mapid);
-        console.log(village_token);
         var base_map = new ol.layer.Tile({
             crossOrigin: 'anonymous',
             source: new ol.source.XYZ({
@@ -111,6 +109,13 @@ var LIBRARY_OBJECT = (function() {
             visible: false,
             name:'boundary_layer'                     
         });
+
+    var selected_layer = "u'wendou:Village'"
+    var legend_title = "u'Wendou:Village'"
+	console.log(selected_layer)
+	console.log(legend_title)
+
+
 		var namestyle = new ol.style.Style({
 			text: new ol.style.Text({
 			  font: '20px Verdana',
@@ -146,7 +151,7 @@ var LIBRARY_OBJECT = (function() {
             visible: true,
             name:'ponds_layer'
         });
-        console.log(ponds_layer)
+
          var region_layer = new ol.layer.Tile({
             source: new ol.source.XYZ({
                 url: "https://earthengine.googleapis.com/map/"+region_mapid+"/{z}/{x}/{y}?token="+region_token
@@ -176,6 +181,7 @@ var LIBRARY_OBJECT = (function() {
             visible: false,
             name:'village_layer'
         });
+
         select_feature_source = new ol.source.Vector();
         select_feature_layer = new ol.layer.Vector({
             source: select_feature_source,
@@ -199,7 +205,7 @@ var LIBRARY_OBJECT = (function() {
             // url:""
         });
 
-        layers = [base_map,mndwi_layer,ponds_layer,true_layer,water_layer,select_feature_layer,region_layer,commune_layer,arrondissement_layer,village_layer,boundary_layer];
+        layers = [base_map, mndwi_layer, ponds_layer, true_layer, water_layer, select_feature_layer, region_layer, commune_layer, arrondissement_layer, village_layer, boundary_layer];
         map = new ol.Map({
 			target: 'map',
 			controls: ol.control.defaults().extend([
