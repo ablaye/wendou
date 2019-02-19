@@ -45,13 +45,13 @@
 	</ul>
 	<!--</form>-->
 </div>
-<div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Reset" onClick="window.location.reload()">
+<div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Réinitialiser" onClick="window.location.reload()">
     <a><span class="fa fa-refresh"></span></a>
 </div>
 <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Chart">
     <a data-toggle="modal" data-target="#chart-modal"><span class="fa fa-area-chart"></span></a>
 </div>
-<div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Help">
+<div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Aide">
     <a data-toggle="modal" data-target="#help-modal"><span class="glyphicon glyphicon-question-sign"></span></a>
 </div>
 {% endblock %}
@@ -83,8 +83,8 @@
 		<label><input type="checkbox" id="select_region_layer" name="region_layer">Region</label></li>&nbsp
 		<li><label><input type="checkbox" id="select_arrondissement_layer" name="arrondissement_layer" >Arrondissement</label>
 		<label><input type="checkbox" id="select_commune_layer" name="commune_layer" >Commune</label></li>&nbsp
-		<li><label><input type="checkbox" id="select_village_layer" name="village_layer" >Village</label>
-		<label><input type="checkbox" id="boundary_layer" name="zone_layer" >Zone</label></li>
+		<li><label><input type="checkbox" id="select_departement_layer" name=departement_layer" >Departement</label>
+		<label><input type="checkbox" id="select_village_layer" name="village_layer" >Village</label></li>  
 	</ul>
 </div>
 <div class="alert alert-info alert-dismissible intro_message" role="alert">
@@ -126,14 +126,9 @@
     <div id="zoom-attr" class="zoom-attr ol-unselectable ol-control">
         <div id="zoomlevel"></div>
     </div>
-    <!--<div id="zoomlevel"></div>-->
-	<h1>GeoServer Layers</h1>
-	<form method="post">
-		{% csrf_token %}
-		{% gizmo select_input select_options %}
-		<input name="submit" type="submit" value="Update" class="btn btn-default">
-	</form>
-	{% gizmo map_options %}
+    <div id="zoomlevel"></div>
+</div>
+<div>
 
 </div>
 <div id="layers" name="layers" data-ponds-mapid="{{ponds_mapid}}" data-ponds-token="{{ponds_token}}" data-region-mapid="{{region_mapid}}" data-region-token="{{region_token}}" data-commune-mapid="{{commune_mapid}}" data-commune-token="{{commune_token}}" data-arrondissement-mapid="{{arrondissement_mapid}}" data-arrondissement-token="{{arrondissement_token}}" data-mndwi-mapid="{{mndwiImg_mapid}}" data-mndwi-token="{{mndwiImg_token}}" data-village-mapid="{{village_mapid}}" data-village-token="{{village_token}}" style="display:none;">	

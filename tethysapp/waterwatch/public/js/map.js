@@ -5,7 +5,6 @@
  * COPYRIGHT: (c) SERVIR GLOBAL 2017
  * LICENSE: BSD 2-Clause
  *****************************************************************************/
-
 /*****************************************************************************
  *                      LIBRARY WRAPPER
  *****************************************************************************/
@@ -16,9 +15,11 @@ var LIBRARY_OBJECT = (function() {
      *                      MODULE LEVEL / GLOBAL VARIABLES
      *************************************************************************/
     var base_map2,
-		baseLayer,
+	baseLayer,
         current_layer,
+	villageLayer,
         layers,
+        village_geoserver_layer,
         map,
         ponds_mapid,
         ponds_token,
@@ -41,13 +42,13 @@ var LIBRARY_OBJECT = (function() {
         true_source,
         projectionSelect,
         precisionInput,
-		mousePositionControl,
-		true_layer;
+	mousePositionControl,
+	true_layer;
     /************************************************************************
      *                    PRIVATE FUNCTION DECLARATIONS
      *************************************************************************/
     var generate_chart,
-		generate_details,
+	generate_details,
         generate_forecast,
         init_all,
         init_events,
@@ -94,6 +95,52 @@ var LIBRARY_OBJECT = (function() {
             visible: false,
             name:'base_map2'            
         });
+	var region_layer = new ol.layer.Tile({
+	   title: 'Region Senegal',
+	   source: new ol.source.TileWMS({
+	     url: 'http://localhost:8080/geoserver/wms',
+	     params: {LAYERS: 'wendou:region_senegal', TILED: true}
+	   }),
+            visible: false,
+            name:'region_Senegal'
+	 });
+	var arrondissement_layer = new ol.layer.Tile({
+	   title: 'Arrondissement Senegal',
+	   source: new ol.source.TileWMS({
+	     url: 'http://localhost:8080/geoserver/wms',
+	     params: {LAYERS: 'wendou:arrondissement_senegal', TILED: true}
+	   }),
+            visible: false,
+            name:'arrondissement_Senegal'
+	 });
+	var departement_layer = new ol.layer.Tile({
+	   title: 'Departement Senegal',
+	   source: new ol.source.TileWMS({
+	     url: 'http://localhost:8080/geoserver/wms',
+	     params: {LAYERS: 'wendou:departement_senegal', TILED: true}
+	   }),
+            visible: false,
+            name:'departement_Senegal'
+	 });
+	var commune_layer = new ol.layer.Tile({
+	   title: 'Commune Senegal',
+	   source: new ol.source.TileWMS({
+	     url: 'http://localhost:8080/geoserver/wms',
+	     params: {LAYERS: 'wendou:commune', TILED: true}
+	   }),
+            visible: false,
+            name:'commune_Senegal'
+	 });
+	var village_layer = new ol.layer.Tile({
+	   title: 'Village Wendou',
+	   source: new ol.source.TileWMS({
+	     url: 'http://localhost:8080/geoserver/wms',
+	     params: {LAYERS: 'wendou:Village', TILED: true}
+	   }),
+            zIndex: 900,
+            visible: false,
+            name:'Village_Wendou'
+	 });
 
         var west_africa = new ol.Feature(new ol.geom.Polygon([[[-1600000,1580000],[-1370000,1580000],[-1370000,1860000],[-1800000,1860000],[-1800000,1580000]]]));
 
@@ -109,12 +156,6 @@ var LIBRARY_OBJECT = (function() {
             visible: false,
             name:'boundary_layer'                     
         });
-
-    var selected_layer = "u'wendou:Village'"
-    var legend_title = "u'Wendou:Village'"
-	console.log(selected_layer)
-	console.log(legend_title)
-
 
 		var namestyle = new ol.style.Style({
 			text: new ol.style.Text({
@@ -134,7 +175,7 @@ var LIBRARY_OBJECT = (function() {
 		   })
 		];
         boundary_layer.getSource().addFeatures([west_africa]);
-
+         
          var mndwi_layer = new ol.layer.Tile({
             source: new ol.source.XYZ({
                 url: "https://earthengine.googleapis.com/map/"+mndwi_mapid+"/{z}/{x}/{y}?token="+mndwi_token
@@ -150,36 +191,6 @@ var LIBRARY_OBJECT = (function() {
             zIndex: 1000,
             visible: true,
             name:'ponds_layer'
-        });
-
-         var region_layer = new ol.layer.Tile({
-            source: new ol.source.XYZ({
-                url: "https://earthengine.googleapis.com/map/"+region_mapid+"/{z}/{x}/{y}?token="+region_token
-            }),
-            style: namestyle,
-            visible: false,
-            name:'region_layer'
-        });
-         var commune_layer = new ol.layer.Tile({
-            source: new ol.source.XYZ({
-                url: "https://earthengine.googleapis.com/map/"+commune_mapid+"/{z}/{x}/{y}?token="+commune_token
-            }),
-            visible: false,
-            name:'commune_layer'
-        });
-         var arrondissement_layer = new ol.layer.Tile({
-            source: new ol.source.XYZ({
-                url: "https://earthengine.googleapis.com/map/"+arrondissement_mapid+"/{z}/{x}/{y}?token="+arrondissement_token
-            }),
-            visible: false,
-            name:'arrondissement_layer'
-        });
-         var village_layer = new ol.layer.Tile({
-            source: new ol.source.XYZ({
-                url: "https://earthengine.googleapis.com/map/"+village_mapid+"/{z}/{x}/{y}?token="+village_token
-            }),
-            visible: false,
-            name:'village_layer'
         });
 
         select_feature_source = new ol.source.Vector();
@@ -205,7 +216,7 @@ var LIBRARY_OBJECT = (function() {
             // url:""
         });
 
-        layers = [base_map, mndwi_layer, ponds_layer, true_layer, water_layer, select_feature_layer, region_layer, commune_layer, arrondissement_layer, village_layer, boundary_layer];
+        layers = [base_map, mndwi_layer, ponds_layer, true_layer, water_layer, select_feature_layer, region_layer, commune_layer, arrondissement_layer, village_layer, departement_layer];
         map = new ol.Map({
 			target: 'map',
 			controls: ol.control.defaults().extend([
@@ -629,7 +640,7 @@ var LIBRARY_OBJECT = (function() {
                 map.getLayers().item(9).setVisible(false);
             }
         });
-        $('#boundary_layer').change(function() {
+        $('#select_departement_layer').change(function() {
             // this will contain a reference to the checkbox
             if (this.checked) {
                 map.getLayers().item(10).setVisible(true);
