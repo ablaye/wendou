@@ -167,15 +167,15 @@ var LIBRARY_OBJECT = (function() {
 			})
 		});
         var defaultStyles = [
-		   new ol.style.Style({
-				fill: new ol.style.Fill({
-					color: 'white'
-				}),
-				stroke: new ol.style.Stroke({color: 'black', width: 2})
-		   })
-		];
+		new ol.style.Style({
+			fill: new ol.style.Fill({
+				color: 'white'
+			}),
+			stroke: new ol.style.Stroke({color: 'black', width: 2})
+		})
+	];
         boundary_layer.getSource().addFeatures([west_africa]);
-         
+
          var mndwi_layer = new ol.layer.Tile({
             source: new ol.source.XYZ({
                 url: "https://earthengine.googleapis.com/map/"+mndwi_mapid+"/{z}/{x}/{y}?token="+mndwi_token
