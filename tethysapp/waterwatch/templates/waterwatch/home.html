@@ -11,6 +11,7 @@
 {% block global_scripts %}
 {{block.super}}
 
+<script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
 <script src="https://code.highcharts.com/stock/highstock.js"></script>
 <script src="https://code.highcharts.com/highcharts-more.js"></script>
 <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
@@ -180,6 +181,7 @@
                         <li role="presentation" class="active"><a id="historic" href="#historic_tab" aria-controls="historic_tab" role="tab" data-toggle="tab">Historic</a></li>
                         <li role="presentation" ><a id="forecast" href="#forecast_tab" aria-controls="forecast_tab" role="tab" data-toggle="tab">Forecast</a></li>
                         <li role="presentation" ><a id="details" href="#details_tab" aria-controls="details_tab" role="tab" data-toggle="tab">Details</a></li>
+                        <li role="presentation" ><a id="village" href="#village_tab" aria-controls="village_tab" role="tab" data-toggle="tab">Village</a></li>
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade in active" id="historic_tab">
@@ -220,7 +222,19 @@
                                     </div>
                                 </div>
                             </div>
-                        </div> <!-- /.tab-pane -->
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="village_tab">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <div class="chart-wrapper">
+                                        <div class="chart-inner" style="width:100%;height:75%;">
+											<table id="meta-table-village" class="table table-responsive table-condensed table-hover">
+											</table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <br>
                     <table id="meta-table" class="table table-responsive table-condensed table-hover">

@@ -37,6 +37,7 @@ st2 = ee.ImageCollection('COPERNICUS/S2')
 
 ponds = ee.FeatureCollection('projects/servir-wa/services/ephemeral_water_ferlo/ferlo_ponds')\
                 .map(addArea).filter(ee.Filter.gt("area",10000))
+
 region = ee.FeatureCollection('users/satigebelal/region')\
 				.map(addArea)
 commune = ee.FeatureCollection('users/satigebelal/commune')\
@@ -531,6 +532,16 @@ def checkFeature(lon,lat):
 
     coordinates = selPond.getInfo()['features'][0]['geometry']['coordinates']
     return ts_values,coordinates,name
+
+def checkPonds():
+    coordinates = ponds.getInfo()['features']
+#    print('coordinates', coordinates)
+    return coordinates
+
+def checkVillage():
+    coordinates = village.getInfo()['features']
+    return coordinates
+
 
 def forecastFeature(lon,lat):
     selPond = filterPond(lon,lat)

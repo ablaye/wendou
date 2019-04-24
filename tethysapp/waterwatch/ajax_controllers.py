@@ -75,7 +75,6 @@ def mndwi(request):
             return_obj["error"] = _("Error Processing Request. Error: ")+ str(e)
 
     return JsonResponse(return_obj)
-
 def details(request):
 
     return_obj = {}
@@ -112,5 +111,27 @@ def details(request):
             return_obj["error"] = _("Error Processing Request. Error: ")+ str(e)
         print(_("processing complete..."))
 
+    return JsonResponse(return_obj)
+
+def coucheMares(request):
+    return_obj = {}
+    if request.is_ajax() and request.method == 'POST':
+        try:
+            ponds = checkPonds()
+            return_obj["ponds"] = ponds
+            return_obj["success"] = "success"
+        except Exception as e:
+            return_obj["error"] = _("Error Processing Request. Error: ")+ str(e)
+    return JsonResponse(return_obj)
+
+def coucheVillages(request):
+    return_obj = {}
+    if request.is_ajax() and request.method == 'POST':
+        try:
+            village = checkVillage()
+            return_obj["village"] = village
+            return_obj["success"] = "success"
+        except Exception as e:
+            return_obj["error"] = _("Error Processing Request. Error: ")+ str(e)
     return JsonResponse(return_obj)
 

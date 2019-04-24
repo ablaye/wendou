@@ -43,13 +43,15 @@ var LIBRARY_OBJECT = (function() {
         projectionSelect,
         precisionInput,
 	mousePositionControl,
+	intersection,
 	true_layer;
     /************************************************************************
      *                    PRIVATE FUNCTION DECLARATIONS
      *************************************************************************/
     var generate_chart,
-	generate_details,
+		generate_details,
         generate_forecast,
+        generate_village,
         init_all,
         init_events,
         init_vars,
@@ -203,7 +205,6 @@ var LIBRARY_OBJECT = (function() {
                 })
             })
         });
-
         water_source = new ol.source.XYZ();
         water_layer = new ol.layer.Tile({
             source: water_source
@@ -272,7 +273,6 @@ var LIBRARY_OBJECT = (function() {
             document.getElementById('zoomlevel').innerHTML = zoomInfo;
         });
         map.on("singleclick",function(evt){
-
             var zoom = map.getView().getZoom();
             $chartModal.modal('show');
             if (zoom < 14){
@@ -296,6 +296,11 @@ var LIBRARY_OBJECT = (function() {
             $("#forecast-plotter").addClass('hidden');
             $("#details-plotter").addClass('hidden');
             //$tsplotModal.modal('show');
+		    var myGeoJSON1 = [];		    
+		    var myGeoJSON2 = [];
+			var mareSelect,buffered;
+			var $elements;
+
             var xhr = ajax_update_database('timeseries',{'lat':proj_coords[1],'lon':proj_coords[0]},'name');
             xhr.done(function(data) {
                 if("success" in data) {
@@ -306,20 +311,59 @@ var LIBRARY_OBJECT = (function() {
                     polygon.applyTransform(ol.proj.getTransform('EPSG:4326', 'EPSG:3857'));
                     var feature = new ol.Feature(polygon);
 
+					mareSelect= turf.polygon(data.coordinates);
+
+					buffered = turf.buffer(mareSelect, 10, {units: 'kilometers'});
+					var villagehr = ajax_update_database('coucheVillages');
+					villagehr.done(function(data2) {
+							for (var iter = 0; iter < data2.village.length; iter++) {
+								var buff1= turf.feature(data2.village[iter].geometry, data2.village[iter].properties);
+								if(turf.booleanWithin(buff1, buffered)){
+									var ptsWithin = 'Village :'+data2.village[iter].properties['Toponymie']+'// Population '+data2.village[iter].properties['EffectifPo'];
+									myGeoJSON1.push(buff1);
+									myGeoJSON2.push(ptsWithin);
+									var x = document.createElement("p");
+									var x1 = document.createElement("b");
+									var t = document.createTextNode(data2.village[iter].properties['Toponymie'] );
+									var t1 = document.createTextNode(" avec  "+data2.village[iter].properties['EffectifPo']+" habitants");
+									x1.appendChild(t);
+									x.appendChild(x1);
+									x.appendChild(t1);
+									var newElement = $('<div>', { text: data2.village[iter].properties['Toponymie'] +'  avec  '+data2.village[iter].properties['EffectifPo']+' habitants'});
+									if( $elements ) {
+										$elements = $($elements).add(x);
+									}else{
+										$elements = $().add(x);
+									}
+								}
+							}
+							$("#meta-table-village").html('');
+							var h = document.createElement("h2");
+							var titre = document.createTextNode("Villages à 10 km de la mare de "+data.name);
+							h.appendChild(titre);
+							$("#meta-table-village").append(h);
+							$("#meta-table-village").append($elements);
+							$("#reset").removeClass('hidden');
+								
+					});
+					var buffOut1 = turf.featureCollection(myGeoJSON1);
+
+
                     map.getLayers().item(5).getSource().clear();
                     select_feature_source.addFeature(feature);
 
                     generate_chart(data.values,proj_coords[1],proj_coords[0],data.name);
-
+				//	generate_village($elements);
+					
                     $loading.addClass('hidden');
                     $("#plotter").removeClass('hidden');
-
                 }else{
                     $('.info').html('<b>Erreur lors du traitement de la demande. Assurez-vous de cliquer sur une fonctionnalité.'+data.error+'</b>');
                     $('#info').removeClass('hidden');
                     $loading.addClass('hidden');
                 }
               });
+                          
             var yhr = ajax_update_database('forecast',{'lat':proj_coords[1],'lon':proj_coords[0]},'name');
             yhr.done(function(data) {
                 if("success" in data) {
@@ -343,6 +387,7 @@ var LIBRARY_OBJECT = (function() {
                     $loadingF.addClass('hidden');
                 }
             });
+
             var zhr = ajax_update_database('details',{'lat':proj_coords[1],'lon':proj_coords[0]},'name');
             zhr.done(function(data) {
                 if("success" in data) {
@@ -532,6 +577,13 @@ var LIBRARY_OBJECT = (function() {
         $("#reset").removeClass('hidden');
 
     };
+    //generate_village = function($elements){
+      //  $("#meta-table-village").html('');
+	//	$("#meta-table-village").append($elements);
+//        $("#reset").removeClass('hidden');
+//
+//    };
+
 
     //onClick="vector_summer.setVisible(!vector_summer.getVisible());"
 

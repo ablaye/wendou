@@ -16,7 +16,6 @@ class Waterwatch(TethysAppBase):
     """
     Tethys app class for Water ENvironment for Observation in support of Users (WENDOU) in Ferlo, Senegal.
     """
-
     name = _('WENDOU (Water ENvironment Dashboard for Observation in support of Users in Ferlo, Senegal)')
     index = 'waterwatch:home'
     icon = 'waterwatch/images/logo_2.png'
@@ -59,6 +58,16 @@ class Waterwatch(TethysAppBase):
                 name='mnwdi',
                 url='waterwatch/mndwi',
                 controller='waterwatch.ajax_controllers.mndwi'
+            ),
+            UrlMap(
+                name='coucheMares',
+                url='waterwatch/coucheMares',
+                controller='waterwatch.ajax_controllers.coucheMares'
+            ),
+            UrlMap(
+                name='coucheVillages',
+                url='waterwatch/coucheVillages',
+                controller='waterwatch.ajax_controllers.coucheVillages'
             ),
             UrlMap(
                 name='getPonds',

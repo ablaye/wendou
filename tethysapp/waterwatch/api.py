@@ -114,3 +114,25 @@ def api_get_details(request):
         except Exception as e:
             json_obj["error"] = _("Error Processing Request. Error: ")+ str(e)
     return JsonResponse(json_obj)
+
+def api_get_coucheMares(request):
+    json_obj = {}
+    if request.method == 'GET':
+        try:
+            ponds = checkPonds()
+            return_obj["ponds"] = ponds
+            return_obj["success"] = "success"
+        except Exception as e:
+            json_obj["error"] = _("Error Processing Request. Error: ")+ str(e)
+    return JsonResponse(json_obj)
+
+def api_get_coucheVillages(request):
+    json_obj = {}
+    if request.method == 'GET':
+        try:
+            village = checkVillage()
+            return_obj["village"] = village
+            return_obj["success"] = "success"
+        except Exception as e:
+            json_obj["error"] = _("Error Processing Request. Error: ")+ str(e)
+    return JsonResponse(json_obj)
