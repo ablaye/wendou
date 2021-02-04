@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.decorators import login_required
 from tethys_sdk.gizmos import *
-from utilities import *
+from utilities import initLayers
 from app import Waterwatch as app
 
 

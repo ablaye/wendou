@@ -20,7 +20,7 @@
 .map-view-legend {
     bottom: 65px;
     /*right: 20px;*/
-    width: 170px;
+    width: 190px;
     max-height: 90%;
     overflow-y: auto;
     margin: 5px;
@@ -48,9 +48,9 @@
   background: rgba(0,60,136,.5)
 }
 .coord-attr {
-    top: 185px;
+    bottom: 65px;
     right: 5px;
-    width: 275px;
+    width: 175px;
     height:52px;
     margin: 3px;
     color:white;
@@ -62,11 +62,9 @@
   background: rgba(0,60,136,.5)
 }
 .zoom-attr {
-    top: 35px;
-    right: 5px;
-    width: 275px;
+    width: 240px;
     height:26px;
-    margin: 3px;
+    margin: 2px;
     color:white;
     background: rgba(0,60,136,.8);
     border: 1px #ddd solid;
@@ -84,13 +82,15 @@
 #logos {
   padding: 5px 0;
   white-space: nowrap;
-  width: 100%;
   display: table;
 }
 
 .logo-image {
   vertical-align: middle;
   display: table-cell;
+  padding: 0 2px;
+}
+.logo-image1 {
   padding: 0 2px;
 }
 
@@ -115,10 +115,10 @@
 
 #menulayers{
 	position: absolute;
-    top: 250px;
-	right: 5px;
-    width: 275px;
-    height:200px;
+    	bottom: 275px;
+	left: 5px;
+    	width: 375px;
+    	height:355px;
 	background-color: rgba(0, 60, 136, 0.7);
 	color: #fff;
 	padding: 8px 12px;

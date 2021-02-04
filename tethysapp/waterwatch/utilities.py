@@ -24,7 +24,7 @@ except EEException as e:
     service_account_email='',
     filename='',
     private_key_password='notasecret',
-    scopes=ee.oauth.SCOPE + ' https://www.googleapis.com/auth/drive ')
+    scopes=ee.oauth.SCOPE + ' https://www.googleapis.com/auth/drive ');
     ee.Initialize(credentials)
 
 def addArea(feature):
@@ -473,6 +473,7 @@ villageImgID = village.getMapId()
 
 img = mergedCollection.median().clip(studyArea)
 
+print('img', img)
 mndwiImg = mndwiCollection.select('mndwi').median().clip(area_senegal).getMapId({'min':-0.2,'max':-0.05,'palette':'d3d3d3,84adff,9698d1,0000cc'})
 
 gfs = ee.ImageCollection('NOAA/GFS0P25')
@@ -503,7 +504,7 @@ def filterPond(lon, lat):
 
 def filterDetails(lon, lat):
     point = ee.Geometry.Point(float(lon), float(lat))
-    
+
     sampledPoint = ee.Feature(ponds.filterBounds(point).first())
     sampledRegion = ee.Feature(region.filterBounds(point).first())
     sampledCommune = ee.Feature(commune.filterBounds(point).first())
@@ -535,7 +536,6 @@ def checkFeature(lon,lat):
 
 def checkPonds():
     coordinates = ponds.getInfo()['features']
-#    print('coordinates', coordinates)
     return coordinates
 
 def checkVillage():
@@ -573,7 +573,7 @@ def getMNDWI(lon,lat,xValue,yValue):
 
 def detailsFeature(lon,lat):
     point = ee.Geometry.Point(float(lon), float(lat))
-    
+
     sampledPoint = ee.Feature(ponds.filterBounds(point).first())
     sampledRegion = ee.Feature(region.filterBounds(point).first())
     sampledCommune = ee.Feature(commune.filterBounds(point).first())
@@ -592,7 +592,7 @@ def detailsFeature(lon,lat):
     return selPond, selRegion, selCommune, selArrondissement
 
 def filterRegion(lon, lat):
-	
+
     point = ee.Geometry.Point(float(lon), float(lat))
     sampledPoint = ee.Feature(region.filterBounds(point).first())
 
@@ -601,7 +601,7 @@ def filterRegion(lon, lat):
     selRegion = region.filter(ee.Filter.eq('id_reg', computedValue))
 
     return selRegion
-    
+
 def filterCommune(lon, lat):
     point = ee.Geometry.Point(float(lon), float(lat))
     sampledPoint = ee.Feature(commune.filterBounds(point).first())
@@ -611,7 +611,7 @@ def filterCommune(lon, lat):
     selCommune = commune.filter(ee.Filter.eq('id_com', computedValue))
 
     return selCommune
-    
+
 def filterArrondissement(lon, lat):
     point = ee.Geometry.Point(float(lon), float(lat))
     sampledPoint = ee.Feature(arrondissement.filterBounds(point).first())
@@ -623,7 +623,7 @@ def filterArrondissement(lon, lat):
     return selArrondissement
 
 def filterVillage(lon, lat):
-	
+
     point = ee.Geometry.Point(float(lon), float(lat))
     sampledPoint = ee.Feature(village.filterBounds(point).first())
 
