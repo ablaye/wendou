@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from utilities import *
+from .utilities import *
 import json
 import os, sys
 from django.http import JsonResponse
@@ -25,7 +25,7 @@ def timeseries(request):
             return_obj["name"] = name
             return_obj["success"] = "success"
         except Exception as e:
-            return_obj["error"] = _("Error Processing Request. Error: ")+ str(e)
+            return_obj["error"] = "Error Processing Request. Error: "+ str(e)
     return JsonResponse(return_obj)
 
 def forecast(request):
@@ -41,9 +41,9 @@ def forecast(request):
         return_obj["name"] = name
         return_obj["success"] = "success"
     except Exception as e:
-        return_obj["error"] = _("Error Processing Request. Error: ")+ str(e)
+        return_obj["error"] = "Error Processing Request. Error: "+ str(e)
 
-    print(_("processing complete..."))
+    print("processing complete...")
 
     return JsonResponse(return_obj)
 
@@ -66,13 +66,13 @@ def mndwi(request):
             return_obj["water_mapid"] = mndwi_img["mapid"]
             return_obj["water_token"] = mndwi_img["token"]
             return_obj["true_mapid"] = true_img["mapid"]
-            return_obj["true_token"] = true_img["token"]
+            # return_obj["true_token"] = true_img["token"]
             return_obj["date"] = clicked_date
             return_obj["cloud_cover"] = properties["CLOUD_COVER"]
             return_obj["success"] = "success"
 
         except Exception as e:
-            return_obj["error"] = _("Error Processing Request. Error: ")+ str(e)
+            return_obj["error"] = "Error Processing Request. Error: "+ str(e)
 
     return JsonResponse(return_obj)
 def details(request):
@@ -86,30 +86,30 @@ def details(request):
 
         try:          
             ponds = filterPond(lon,lat)
-            region = filterRegion(lon,lat)
-            commune = filterCommune(lon,lat)
-            arrondissement = filterArrondissement(lon,lat)
+            # region = filterRegion(lon,lat)
+            # commune = filterCommune(lon,lat)
+            # arrondissement = filterArrondissement(lon,lat)
             namePond = ponds.getInfo()['features'][0]['properties']['Nom']
             if len(namePond) < 2:
-                namePond = _('Unnamed Pond')
+                namePond = 'Unnamed Pond'
 
             coordinates = ponds.getInfo()['features'][0]['geometry']['coordinates']
 
             sup_Pond = ponds.getInfo()['features'][0]['properties']['Sup']
-            nameRegion = region.getInfo()['features'][0]['properties']['nom']
-            nameCommune = commune.getInfo()['features'][0]['properties']['nom']
-            nameArrondissement = arrondissement.getInfo()['features'][0]['properties']['nom']
+            # nameRegion = region.getInfo()['features'][0]['properties']['nom']
+            # nameCommune = commune.getInfo()['features'][0]['properties']['nom']
+            # nameArrondissement = arrondissement.getInfo()['features'][0]['properties']['nom']
 
             return_obj["namePond"] = namePond
             return_obj["sup_Pond"] = sup_Pond
             return_obj["coordinates"] = coordinates
-            return_obj["nameRegion"] = nameRegion
-            return_obj["nameCommune"] = nameCommune
-            return_obj["nameArrondissement"] = nameArrondissement
+            # return_obj["nameRegion"] = nameRegion
+            # return_obj["nameCommune"] = nameCommune
+            # return_obj["nameArrondissement"] = nameArrondissement
             return_obj["success"] = "success"
         except Exception as e:
-            return_obj["error"] = _("Error Processing Request. Error: ")+ str(e)
-        print(_("processing complete..."))
+            return_obj["error"] = "Error Processing Request. Error: "+ str(e)
+        print("processing complete...")
 
     return JsonResponse(return_obj)
 
@@ -121,17 +121,17 @@ def coucheMares(request):
             return_obj["ponds"] = ponds
             return_obj["success"] = "success"
         except Exception as e:
-            return_obj["error"] = _("Error Processing Request. Error: ")+ str(e)
+            return_obj["error"] = "Error Processing Request. Error: "+ str(e)
     return JsonResponse(return_obj)
 
-def coucheVillages(request):
-    return_obj = {}
-    if request.is_ajax() and request.method == 'POST':
-        try:
-            village = checkVillage()
-            return_obj["village"] = village
-            return_obj["success"] = "success"
-        except Exception as e:
-            return_obj["error"] = _("Error Processing Request. Error: ")+ str(e)
-    return JsonResponse(return_obj)
+# def coucheVillages(request):
+#     return_obj = {}
+#     if request.is_ajax() and request.method == 'POST':
+#         try:
+#             village = checkVillage()
+#             return_obj["village"] = village
+#             return_obj["success"] = "success"
+#         except Exception as e:
+#             return_obj["error"] = _("Error Processing Request. Error: ")+ str(e)
+#     return JsonResponse(return_obj)
 
