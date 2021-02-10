@@ -1,0 +1,131 @@
+#app-content-wrapper #app-content {
+    padding-bottom:0;
+    margin:0;
+    height: 100%;
+}
+#app-content-wrapper #app-content #app-actions{
+    display:none;
+}
+
+#inner-app-content {
+    padding:0;
+    margin:0;
+    height: 100%;
+}
+
+#inner-app-content .intro_message {
+    margin-bottom: 0;
+}
+
+.map-view-legend {
+    bottom: 65px;
+    /*right: 20px;*/
+    width: 190px;
+    max-height: 90%;
+    overflow-y: auto;
+    margin: 5px;
+    color:white;
+    background: rgba(0,60,136,.8);
+    border: 1px #ddd solid;
+    z-index: 999;
+}
+.map-view-legend:hover {
+  background: rgba(0,60,136,.5)
+}
+
+.gee-attr {
+    top: 7px;
+    right: 5px;
+    width: 275px;
+    height:26px;
+    margin: 3px;
+    color:white;
+    background: rgba(0,60,136,.8);
+    border: 1px #ddd solid;
+    z-index: 999;
+}
+.gee-attr:hover {
+  background: rgba(0,60,136,.5)
+}
+.coord-attr {
+    bottom: 65px;
+    right: 5px;
+    width: 175px;
+    height:52px;
+    margin: 3px;
+    color:white;
+    background: rgba(0,60,136,.8);
+    border: 1px #ddd solid;
+    z-index: 99999;
+}
+.coord-attr:hover {
+  background: rgba(0,60,136,.5)
+}
+.zoom-attr {
+    width: 240px;
+    height:26px;
+    margin: 2px;
+    color:white;
+    background: rgba(0,60,136,.8);
+    border: 1px #ddd solid;
+    z-index: 999;
+}
+.zoom-attr:hover {
+  background: rgba(0,60,136,.5)
+}
+.flex-container-row {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    align-items: center;
+}
+#logos {
+  padding: 5px 0;
+  white-space: nowrap;
+  display: table;
+}
+
+.logo-image {
+  vertical-align: middle;
+  display: table-cell;
+  padding: 0 2px;
+}
+.logo-image1 {
+  padding: 0 2px;
+}
+
+.logo-image img {
+  max-width: 100%;
+}
+
+
+
+/*#help-modal .modal-dialog{*/
+    /*position: fixed;*/
+    /*display: table; //This is important*/
+    /*overflow-y: auto;*/
+    /*overflow-x: auto;*/
+    /*width: auto;*/
+    /*min-width: 100%;*/
+    /*top: 0;*/
+    /*bottom: 0;*/
+    /*right: 0;*/
+    /*left: 0;*/
+/*}*/
+
+#menulayers{
+	position: absolute;
+    	bottom: 275px;
+	left: 5px;
+    	width: 375px;
+    	height:355px;
+	background-color: rgba(0, 60, 136, 0.7);
+	color: #fff;
+	padding: 8px 12px;
+	font-size: 12px;
+	z-index: 99999;
+}
+
+#menulayers > ul {
+	list-style: none;
+}
