@@ -10,16 +10,15 @@ pathname= os.path.dirname(sys.argv[0])
 localdir = os.path.abspath(pathname) + "/locale/fr_FR/LC_MESSAGES"
 gettext.install("messages", localdir)
 
-
 class Waterwatch(TethysAppBase):
     """
     Tethys app class for Water ENvironment for Observation in support of Users (WENDOU) in Ferlo, Senegal.
     """
     name = 'WENDOU '
-    index = 'waterwatch:home'
-    icon = 'waterwatch/images/logo_2.png'
-    package = 'waterwatch'
-    root_url = 'waterwatch'
+    index = 'waterwatch_2:home'
+    icon = 'waterwatch_2/images/logo_2.png'
+    package = 'waterwatch_2'
+    root_url = 'waterwatch_2'
     color = '#2c3e50'
     description = 'View Water ENvironment Dashboard for Observation in support of Users (WENDOU) in Ferlo, Senegal'
     tags = 'Hydrology', 'Remote-Sensing'
@@ -34,68 +33,68 @@ class Waterwatch(TethysAppBase):
         url_maps = (
             UrlMap(
                 name='home',
-                url='waterwatch',
-                controller='waterwatch.controllers.home'
+                url='waterwatch_2',
+                controller='waterwatch_2.controllers.home'
             ),
             UrlMap(
                 name='timeseries',
-                url='waterwatch/timeseries',
-                controller='waterwatch.ajax_controllers.timeseries'
+                url='waterwatch_2/timeseries',
+                controller='waterwatch_2.ajax_controllers.timeseries'
             ),
             UrlMap(
                 name='forecast',
-                url='waterwatch/forecast',
-                controller='waterwatch.ajax_controllers.forecast'
+                url='waterwatch_2/forecast',
+                controller='waterwatch_2.ajax_controllers.forecast'
             ),
             UrlMap(
                 name='details',
-                url='waterwatch/details',
-                controller='waterwatch.ajax_controllers.details'
+                url='waterwatch_2/details',
+                controller='waterwatch_2.ajax_controllers.details'
             ),
             UrlMap(
                 name='mnwdi',
-                url='waterwatch/mndwi',
-                controller='waterwatch.ajax_controllers.mndwi'
+                url='waterwatch_2/mndwi',
+                controller='waterwatch_2.ajax_controllers.mndwi'
             ),
             UrlMap(
                 name='coucheMares',
-                url='waterwatch/coucheMares',
-                controller='waterwatch.ajax_controllers.coucheMares'
+                url='waterwatch_2/coucheMares',
+                controller='waterwatch_2.ajax_controllers.coucheMares'
             ),
             UrlMap(
                 name='coucheVillages',
-                url='waterwatch/coucheVillages',
-                controller='waterwatch.ajax_controllers.coucheVillages'
+                url='waterwatch_2/coucheVillages',
+                controller='waterwatch_2.ajax_controllers.coucheVillages'
             ),
             UrlMap(
                 name='getPonds',
-                url='waterwatch/api/getPonds',
-                controller='waterwatch.api.api_get_ponds'
+                url='waterwatch_2/api/getPonds',
+                controller='waterwatch_2.api.api_get_ponds'
             ),
             UrlMap(
                 name='getTimeseries',
-                url='waterwatch/api/getTimeseries',
-                controller='waterwatch.api.api_get_timeseries'
+                url='waterwatch_2/api/getTimeseries',
+                controller='waterwatch_2.api.api_get_timeseries'
             ),
             UrlMap(
                 name='getRegion',
-                url='waterwatch/api/getRegion',
-                controller='waterwatch.api.api_get_region'
+                url='waterwatch_2/api/getRegion',
+                controller='waterwatch_2.api.api_get_region'
             ),
             UrlMap(
                 name='getCommune',
-                url='waterwatch/api/getCommune',
-                controller='waterwatch.api.api_get_commune'
+                url='waterwatch_2/api/getCommune',
+                controller='waterwatch_2.api.api_get_commune'
             ),
             UrlMap(
                 name='getArrondissement',
-                url='waterwatch/api/getArrondissement',
-                controller='waterwatch.api.api_get_arrondissement'
+                url='waterwatch_2/api/getArrondissement',
+                controller='waterwatch_2.api.api_get_arrondissement'
             ),
             UrlMap(
                 name='getVillage',
-                url='waterwatch/api/getVillage',
-                controller='waterwatch.api.api_get_village'
+                url='waterwatch_2/api/getVillage',
+                controller='waterwatch_2.api.api_get_village'
             ),
         )
         return url_maps
@@ -105,7 +104,7 @@ class Waterwatch(TethysAppBase):
         """
         sds_settings = (
             SpatialDatasetServiceSetting(
-                name='geoserver_tethys',
+                name='SCO',
                 description='service de jeu de données spatiales à utiliser par l\'application',
                 engine=SpatialDatasetServiceSetting.GEOSERVER,
                 required=True,

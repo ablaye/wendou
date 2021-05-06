@@ -76,6 +76,7 @@ var LIBRARY_OBJECT = (function() {
         $chartModal = $("#chart-modal");
     };
     init_map = function(){
+console.log('hi');
         var attribution = new ol.Attribution({
             html: 'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/rest/services/">ArcGIS</a>'
         });
@@ -106,6 +107,7 @@ var LIBRARY_OBJECT = (function() {
             visible: false,
             name:'region_Senegal'
 	 });
+console.log('hei');
 	var arrondissement_layer = new ol.layer.Tile({
 	   title: 'Arrondissement Senegal',
 	   source: new ol.source.TileWMS({
@@ -279,18 +281,21 @@ var LIBRARY_OBJECT = (function() {
 		})
 	];
         boundary_layer.getSource().addFeatures([west_africa]);
+console.log(mndwi_mapid);
 
          var mndwi_layer = new ol.layer.Tile({
             source: new ol.source.XYZ({
-                url: "https://earthengine.googleapis.com/map/"+mndwi_mapid+"/{z}/{x}/{y}?token="+mndwi_token
+                url: mndwi_mapid
+                    // "https://earthengine.googleapis.com/map/"+mndwi_mapid+"/{z}/{x}/{y}?token="+mndwi_token
             }),
             visible: true,
             name:'mndwi_layer'
         });
-
          var ponds_layer = new ol.layer.Tile({
             source: new ol.source.XYZ({
-                url: "https://earthengine.googleapis.com/map/"+ponds_mapid+"/{z}/{x}/{y}?token="+ponds_token
+                url:ponds_mapid
+                    // "https://earthengine.googleapis.com/map/"+ponds_mapid+"/{z}/{x}/{y}?token="+ponds_token
+
             }),
             zIndex: 1000,
             visible: true,
@@ -317,19 +322,22 @@ var LIBRARY_OBJECT = (function() {
                 })
             })
         });
-        water_source = new ol.source.XYZ();
+        water_source = new ol.source.XYZ({projection: 'EPSG:4326',});
         water_layer = new ol.layer.Tile({
-            source: water_source
+            source: water_source,
             // url:""
+
         });
 
-        true_source = new ol.source.XYZ();
+        true_source = new ol.source.XYZ({projection: 'EPSG:4326',});
         true_layer = new ol.layer.Tile({
             source: true_source
             // url:""
         });
 
+
         layers = [base_map, mndwi_layer, ponds_layer, true_layer, water_layer, select_feature_layer, region_layer, commune_layer, arrondissement_layer, village_layer, departement_layer, Axe_de_transhumance, couloirs_sud, up_praps, up_pafae, up_prodam, up_padaer, up_pasa, up_pdesoc, up_avsf, up_papel];
+
         map = new ol.Map({
 			target: 'map',
 			controls: ol.control.defaults().extend([
@@ -339,12 +347,13 @@ var LIBRARY_OBJECT = (function() {
 			renderer: 'canvas',
             layers: layers,
             view: new ol.View({
-                center: ol.proj.fromLonLat([-15.222,15.2]),
-                zoom: 8,
+                center: [-15.222,15.222],
+                zoom: 5,
                 maxZoom: 16,
                 minZoom:2
             })
         });       
+console.log('dddeed');
 		var params1 = layers[13].getSource().getParams();
 	        params1.cql_filter = "Projet = 'PRAPS'";
 		layers[13].getSource().updateParams(params1);
@@ -386,7 +395,8 @@ var LIBRARY_OBJECT = (function() {
 		});
 		map.addControl(mouse_position);     
 		map.getLayers().item(1).setVisible(false);
-		init_events = init_events = function() {
+console.log('eee');
+		 init_events = function() {
 			(function () {
 				var target, observer, config;
 				// select the target node

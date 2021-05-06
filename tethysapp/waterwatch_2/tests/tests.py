@@ -34,16 +34,16 @@ To run any tests:
        See below for specific examples
 
         To run all tests across this app:
-            Test command: "tethys test -f tethys_apps.tethysapp.waterwatch"
+            Test command: "tethys test -f tethys_apps.tethysapp.waterwatch_2"
 
         To run all tests in this file:
-            Test command: "tethys test -f tethys_apps.tethysapp.waterwatch.tests.tests"
+            Test command: "tethys test -f tethys_apps.tethysapp.waterwatch_2.tests.tests"
 
         To run tests in the WaterwatchTestCase class:
-            Test command: "tethys test -f tethys_apps.tethysapp.waterwatch.tests.tests.WaterwatchTestCase"
+            Test command: "tethys test -f tethys_apps.tethysapp.waterwatch_2.tests.tests.WaterwatchTestCase"
 
         To run only the test_if_tethys_platform_is_great function in the WaterwatchTestCase class:
-            Test command: "tethys test -f tethys_apps.tethysapp.waterwatch.tests.tests.WaterwatchTestCase.test_if_tethys_platform_is_great"
+            Test command: "tethys test -f tethys_apps.tethysapp.waterwatch_2.tests.tests.WaterwatchTestCase.test_if_tethys_platform_is_great"
 
 To learn more about writing tests, see:
     https://docs.djangoproject.com/en/1.9/topics/testing/overview/#writing-tests
@@ -152,7 +152,7 @@ class WaterwatchTestCase(TethysTestCase):
         c.force_login(user)
 
         # Have the test client "browse" to your home page
-        response = c.get('/apps/waterwatch/')  # The final '/' is essential for all pages/controllers
+        response = c.get('/apps/waterwatch_2/')  # The final '/' is essential for all pages/controllers
 
         # Test that the request processed correctly (with a 200 status code)
         self.assertEqual(response.status_code, 200)

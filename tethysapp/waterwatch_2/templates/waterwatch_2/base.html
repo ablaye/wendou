@@ -11,12 +11,12 @@
 
 {% block app_icon %}
   {# The path you provided in your app.py is accessible through the tethys_app.icon context variable #}
-  <img src="{% static tethys_app.icon %}">
+  <img src="{% static 'waterwatch_2/images/logo_2.png' %}">
 {% endblock %}
 
 {# The name you provided in your app.py is accessible through the tethys_app.name context variable #}
 {% block app_title %}
-	{{ tethys_app.name }}
+	WENDOU
 {% endblock %}
 
 {% block app_navigation_items %}
@@ -31,13 +31,13 @@
 
 {% block content_dependent_styles %}
   {{ block.super }}
-  <link href="{% static 'waterwatch/css/main.css' %}" rel="stylesheet"/>
-  <link href="{% static 'waterwatch/v4.3.4/css/ol.css' %}" rel="stylesheet"/>
+  <link href="{% static 'waterwatch_2/css/main.css' %}" rel="stylesheet"/>
+  <link href="{% static 'waterwatch_2/v4.3.4/css/ol.css' %}" rel="stylesheet"/>
 {% endblock %}
 
 {% block scripts %}
   {{ block.super }}
-  <script src="{% static 'waterwatch/js/main.js' %}" type="text/javascript"></script>
-  <script src="{% static 'waterwatch/v4.3.4/build/ol.js' %}" type="text/javascript"></script>
+  <script src="{% static 'waterwatch_2/js/main.js' %}" type="text/javascript"></script>
+  <script src="{% static 'waterwatch_2/v4.3.4/build/ol.js' %}" type="text/javascript"></script>
   
 {% endblock %}
